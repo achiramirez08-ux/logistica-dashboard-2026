@@ -269,7 +269,51 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
 /* Print / PDF friendly */
 @media print {
   section{page-break-after:always}
+  .chrome-persistent{position:absolute}
 }
+
+/* ============================================================
+   PERSISTENT CHROME · Dynker branding en cada slide
+   ============================================================ */
+.chrome-persistent{
+  position:fixed; left:0; right:0; bottom:0;
+  padding:14px 44px 18px;
+  display:grid; grid-template-columns:auto 1fr auto; gap:44px;
+  align-items:center;
+  z-index:200; pointer-events:none;
+  background:linear-gradient(to top, rgba(8,12,20,.92) 0%, rgba(8,12,20,.55) 60%, transparent 100%);
+  color:rgba(255,255,255,.62);
+  border-top:1px solid rgba(255,255,255,.06);
+  transition:background .35s ease, color .35s ease, border-color .35s ease;
+}
+.chrome-persistent.light{
+  background:linear-gradient(to top, rgba(245,241,232,.95) 0%, rgba(245,241,232,.55) 60%, transparent 100%);
+  color:rgba(10,14,20,.5);
+  border-top-color:rgba(0,0,0,.06);
+}
+.chrome-mono{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.24em;
+  text-transform:uppercase; font-weight:600; line-height:1;
+}
+.chrome-brand{display:flex; align-items:center; gap:14px}
+.chrome-mark{
+  font-family:var(--serif); font-size:16px; font-weight:900;
+  letter-spacing:.36em; color:var(--gold);
+  line-height:1; padding-right:14px;
+  border-right:1px solid currentColor;
+  border-right-color:rgba(255,255,255,.18);
+}
+.chrome-persistent.light .chrome-mark{border-right-color:rgba(0,0,0,.15)}
+.chrome-tag{color:inherit; opacity:.85; letter-spacing:.2em; font-size:9px}
+.chrome-agreement{text-align:center; color:inherit; letter-spacing:.22em}
+.chrome-agreement b{color:var(--gold); letter-spacing:.28em; font-weight:700}
+.chrome-project{text-align:right; color:inherit; letter-spacing:.22em}
+.chrome-project .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--gold); margin-right:8px; vertical-align:middle}
+
+/* Ocultar controles nativos reveal (redundantes con chrome) */
+.reveal .controls{display:none !important}
+/* Mover progress bar arriba */
+.reveal .progress{top:0 !important; bottom:auto !important; height:3px !important}
 </style>
 </head>
 <body>
@@ -281,7 +325,7 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
       <div class="hero-wrap">
         <div class="top">
           <div>Proyecto J&F · Documento operativo</div>
-          <div>Vol. 01 · Julio 2026</div>
+          <div>Un documento de <span style="color:var(--gold-l);letter-spacing:.32em;font-weight:800">DYNKER</span> · Julio 2026</div>
         </div>
         <!-- Textura de mapa (SVG simple) -->
         <svg class="maptexture" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
@@ -728,11 +772,24 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
   </div>
 </div>
 
+<!-- ============ CHROME PERSISTENTE · Firma editorial en cada slide ============ -->
+<div class="chrome-persistent" id="chrome">
+  <div class="chrome-brand">
+    <span class="chrome-mark">DYNKER</span>
+    <span class="chrome-mono chrome-tag">Energy &amp; Consulting Group</span>
+  </div>
+  <div class="chrome-mono chrome-agreement">
+    Diseñado y desarrollado por <b>DYNKER</b> · Acuerdo de implementación con Adecomi &amp; Pessasa
+  </div>
+  <div class="chrome-mono chrome-project">
+    <span class="dot"></span>Proyecto J&amp;F · <span id="chromePage">01</span> / 17
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.min.js"></script>
 <script>
 Reveal.initialize({
   hash:true,
-  slideNumber:'c/t',
   transition:'slide',
   transitionSpeed:'default',
   backgroundTransition:'fade',
@@ -741,12 +798,28 @@ Reveal.initialize({
   margin:0.02,
   minScale:0.3,
   maxScale:1.4,
-  controls:true,
+  controls:false,
   progress:true,
   center:false,
   overview:true,
   touch:true
 });
+
+/* Adaptación del chrome al fondo del slide activo */
+function updateChrome(){
+  const cur = Reveal.getCurrentSlide();
+  if(!cur) return;
+  const isLight = cur.classList.contains('paper') || cur.classList.contains('cream') || cur.classList.contains('slate');
+  const chrome = document.getElementById('chrome');
+  chrome.classList.toggle('light', isLight);
+  const idx = Reveal.getIndices().h + 1;
+  const total = Reveal.getTotalSlides();
+  document.getElementById('chromePage').textContent = String(idx).padStart(2,'0');
+  const proj = document.querySelector('.chrome-project');
+  if(proj) proj.innerHTML = '<span class="dot"></span>Proyecto J&amp;F · ' + String(idx).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+}
+Reveal.on('ready', updateChrome);
+Reveal.on('slidechanged', updateChrome);
 </script>
 </body>
 </html>
