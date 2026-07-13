@@ -73,15 +73,22 @@ section.dark .eyebrow::before{background:var(--gold-l)}
 /* Estilos por sección (tema) */
 .reveal section{padding:70px 90px}
 
-section.paper{background:var(--paper); color:var(--ink)}
-section.cream{background:var(--cream); color:var(--ink)}
-section.dark{background:var(--ink); color:var(--slate-1)}
-section.deep{background:linear-gradient(160deg,#0a0e14 0%,#1a2438 60%,#0f3d2e 100%); color:var(--slate-1)}
-section.wine{background:linear-gradient(140deg,#3d1420 0%,#5c1c2a 60%,#2a0e15 100%); color:var(--slate-1)}
-section.forest{background:linear-gradient(150deg,#082a20 0%,#0f3d2e 60%,#051d17 100%); color:var(--slate-1)}
-section.slate{background:linear-gradient(180deg,#f8f6f0 0%,#e5dfcf 100%); color:var(--ink)}
+.reveal .slides section.paper{background:var(--paper); color:var(--ink)}
+.reveal .slides section.cream{background:var(--cream); color:var(--ink)}
+.reveal .slides section.dark{background:var(--ink); color:var(--slate-1)}
+.reveal .slides section.deep{background:linear-gradient(160deg,#0a0e14 0%,#1a2438 60%,#0f3d2e 100%); color:var(--slate-1)}
+.reveal .slides section.wine{background:linear-gradient(140deg,#3d1420 0%,#5c1c2a 60%,#2a0e15 100%); color:var(--slate-1)}
+.reveal .slides section.forest{background:linear-gradient(150deg,#082a20 0%,#0f3d2e 60%,#051d17 100%); color:var(--slate-1)}
+.reveal .slides section.slate{background:linear-gradient(180deg,#f8f6f0 0%,#e5dfcf 100%); color:var(--ink)}
 
-section.dark h3, section.deep h3, section.wine h3, section.forest h3{color:rgba(255,255,255,.6)}
+/* Force headings on dark backgrounds to be legible */
+.reveal .slides section.dark h1, .reveal .slides section.dark h2,
+.reveal .slides section.deep h1, .reveal .slides section.deep h2,
+.reveal .slides section.wine h1, .reveal .slides section.wine h2,
+.reveal .slides section.forest h1, .reveal .slides section.forest h2{color:var(--slate-1)}
+
+.reveal .slides section.dark h3, .reveal .slides section.deep h3,
+.reveal .slides section.wine h3, .reveal .slides section.forest h3{color:rgba(255,255,255,.6)}
 
 /* HERO cover */
 .hero-wrap{position:relative; height:100vh; display:flex; flex-direction:column; justify-content:center; padding:0}
