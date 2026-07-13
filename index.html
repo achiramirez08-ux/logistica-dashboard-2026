@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyecto J&F · Control Room Gas Oil PY/BO</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#111823; --panel2:#0e141d; --line:#1f2a3a;
+    --txt:#e6edf6; --mut:#8ea0b8; --sub:#5b6d85;
+    --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --info:#38bdf8; --accent:#a78bfa;
+    --bo:#38bdf8; --lo:#a78bfa;
+    --grid:#1a2432;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--txt);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--info);text-decoration:none}
+  .app{display:flex;flex-direction:column;min-height:100vh}
+
+  /* Header */
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0f1621,#0b1119)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:34px;height:34px;border-radius:8px;background:radial-gradient(circle at 30% 30%,#22c55e,#0f766e 60%,#052e2b);box-shadow:inset 0 0 12px rgba(0,0,0,.5)}
+  .brand h1{font-size:15px;letter-spacing:.4px;font-weight:600}
+  .brand span{color:var(--mut);font-size:12px;display:block;font-weight:400}
+  .hdr-right{display:flex;gap:16px;align-items:center;font-size:12px;color:var(--mut)}
+  .live{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);border-radius:20px;background:#0e1622}
+  .pulse{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(34,197,94,.7);animation:p 1.6s infinite}
+  @keyframes p{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+  /* Layout */
+  .wrap{padding:18px 22px;display:grid;gap:14px;grid-template-columns:1fr;max-width:1780px;margin:0 auto;width:100%}
+  .row{display:grid;gap:14px}
+  .r-hero{grid-template-columns:repeat(6,1fr)}
+  .r-mid{grid-template-columns: 1.4fr .9fr .9fr}
+  .r-charts{grid-template-columns: 1.5fr 1fr}
+  .r-btm{grid-template-columns: 1.4fr 1fr}
+  @media (max-width:1280px){
+    .r-hero{grid-template-columns:repeat(3,1fr)}
+    .r-mid,.r-charts,.r-btm{grid-template-columns:1fr}
+  }
+
+  /* Card */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+  .card h3{font-size:11px;letter-spacing:1.2px;color:var(--sub);text-transform:uppercase;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+  .card .sub{color:var(--mut);font-size:11px;margin-top:2px}
+  .card .big{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.05}
+  .card .unit{color:var(--sub);font-size:12px;margin-left:4px;font-weight:400}
+  .card .foot{margin-top:8px;color:var(--mut);font-size:11px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .card .delta{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+  .d-ok{background:rgba(34,197,94,.14);color:var(--ok)}
+  .d-warn{background:rgba(245,158,11,.14);color:var(--warn)}
+  .d-bad{background:rgba(239,68,68,.14);color:var(--bad)}
+  .d-info{background:rgba(56,189,248,.14);color:var(--info)}
+
+  .bar{height:6px;background:#1a2635;border-radius:20px;overflow:hidden;margin-top:8px}
+  .bar>span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,var(--info),var(--accent))}
+
+  /* Ciclo activo spotlight */
+  .spot{background:linear-gradient(135deg,#131c2b 0%,#0e1520 100%);border:1px solid #1e2b3f}
+  .spot .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+  .spot .kpi{background:#0d1420;border:1px solid var(--line);border-radius:8px;padding:10px}
+  .spot .kpi h4{font-size:10.5px;color:var(--sub);letter-spacing:1.1px;text-transform:uppercase;margin-bottom:6px}
+  .spot .kpi .v{font-size:20px;font-weight:700}
+  .spot .kpi .s{font-size:11px;color:var(--mut);margin-top:2px}
+  .semrow{display:flex;gap:8px;margin-top:10px}
+  .sem{flex:1;padding:8px 10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600}
+  .sem.ok{background:rgba(34,197,94,.12);color:var(--ok);border:1px solid rgba(34,197,94,.35)}
+  .sem.warn{background:rgba(245,158,11,.12);color:var(--warn);border:1px solid rgba(245,158,11,.35)}
+  .sem.bad{background:rgba(239,68,68,.12);color:var(--bad);border:1px solid rgba(239,68,68,.35)}
+  .sem.nul{background:#0e1622;color:var(--mut);border:1px solid var(--line)}
+
+  /* Semaforo grid */
+  .sfgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:8px}
+  .sfcell{aspect-ratio:1/1;border-radius:6px;background:#0e1622;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;padding:5px;cursor:default;transition:transform .1s}
+  .sfcell:hover{transform:translateY(-2px)}
+  .sfcell .n{font-size:10px;color:var(--sub);font-weight:600}
+  .sfcell .d{display:flex;gap:2px}
+  .sfcell .d>span{flex:1;height:6px;border-radius:2px;background:#1a2432}
+  .sfcell .d>span.ok{background:var(--ok)}
+  .sfcell .d>span.warn{background:var(--warn)}
+  .sfcell .d>span.bad{background:var(--bad)}
+
+  /* Gauges */
+  .gauges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+  .gauge{background:#0d1420;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+  .gauge .nm{font-size:10.5px;color:var(--sub);letter-spacing:1.1px;text-transform:uppercase}
+  .gauge svg{width:100%;height:78px;margin:2px 0}
+  .gauge .vl{font-size:16px;font-weight:700}
+  .gauge .cap{font-size:10.5px;color:var(--mut)}
+
+  /* Timeline Gantt */
+  .gantt{margin-top:10px;overflow-x:auto}
+  .gantt .head{display:grid;grid-template-columns:80px 1fr;font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;padding:0 0 6px 0;border-bottom:1px solid var(--line)}
+  .gantt .row-g{display:grid;grid-template-columns:80px 1fr;align-items:center;padding:5px 0;border-bottom:1px dashed #182130}
+  .gantt .row-g .lbl{font-size:12px;color:var(--mut);font-weight:600}
+  .gantt .track{position:relative;height:22px;background:linear-gradient(to right,rgba(255,255,255,0.02) 0 1px,transparent 1px 100%);background-size:calc(100%/12) 100%}
+  .gantt .bar{position:absolute;top:3px;height:16px;border-radius:4px;font-size:10px;padding:2px 6px;color:#0b0f14;font-weight:700;white-space:nowrap;overflow:hidden}
+  .b-nav{background:linear-gradient(90deg,#38bdf8,#0ea5e9)}
+  .b-win{background:linear-gradient(90deg,#22c55e,#16a34a);opacity:.85}
+  .b-ida{background:linear-gradient(90deg,#f59e0b,#d97706);opacity:.65}
+  .b-crit{background:linear-gradient(90deg,#ef4444,#b91c1c);opacity:.9}
+  .today-line{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.6);z-index:5}
+  .today-line::before{content:"HOY";position:absolute;top:-14px;left:-14px;font-size:9px;color:#fff;background:#111;padding:2px 5px;border-radius:3px;letter-spacing:1px}
+  .gantt .month-hd{display:grid;grid-template-columns:repeat(12,1fr);font-size:10px;color:var(--sub);border-bottom:1px solid var(--line);padding:4px 0}
+  .gantt .month-hd>div{padding-left:4px;border-left:1px solid #182130}
+  .gantt-wrap{min-width:900px}
+
+  /* Alertas */
+  .feed{max-height:340px;overflow-y:auto}
+  .alrt{display:flex;gap:10px;padding:10px;border-bottom:1px solid var(--line);align-items:flex-start}
+  .alrt:last-child{border-bottom:0}
+  .alrt .ic{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+  .alrt .ic.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+  .alrt .ic.bad{background:var(--bad);box-shadow:0 0 8px var(--bad)}
+  .alrt .ic.info{background:var(--info)}
+  .alrt .ic.ok{background:var(--ok)}
+  .alrt .b{flex:1}
+  .alrt .b .t{font-size:12.5px;font-weight:600}
+  .alrt .b .m{font-size:11.5px;color:var(--mut);margin-top:2px}
+  .alrt .b .a{font-size:11px;color:var(--info);margin-top:4px;font-weight:600}
+
+  /* Tabla ciclos */
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;padding:8px 6px;font-size:10.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.9px;font-weight:600;border-bottom:1px solid var(--line)}
+  td{padding:8px 6px;border-bottom:1px solid #182130;color:var(--txt)}
+  tbody tr:hover{background:#0e1622}
+  .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700}
+  .pill.ok{background:rgba(34,197,94,.14);color:var(--ok)}
+  .pill.warn{background:rgba(245,158,11,.14);color:var(--warn)}
+  .pill.bad{background:rgba(239,68,68,.14);color:var(--bad)}
+  .pill.mut{background:#0e1622;color:var(--mut);border:1px solid var(--line)}
+
+  /* Inputs / editor */
+  .editor{background:#0d1420}
+  .editor table{font-size:11.5px}
+  .editor td{padding:5px}
+  .editor input[type="date"],
+  .editor input[type="number"]{background:#0b1119;color:var(--txt);border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:11.5px;width:100%;font-family:inherit}
+  .editor input:focus{outline:none;border-color:var(--info)}
+  .btn{background:var(--info);color:#04121c;border:0;padding:8px 14px;border-radius:6px;font-weight:700;cursor:pointer;font-size:12px;letter-spacing:.3px}
+  .btn.ghost{background:transparent;color:var(--mut);border:1px solid var(--line)}
+  .btn:hover{filter:brightness(1.1)}
+  .toolbar{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+
+  .footer{padding:14px 22px;color:var(--sub);font-size:11px;text-align:center;border-top:1px solid var(--line)}
+  .legend{display:flex;gap:12px;font-size:10.5px;color:var(--mut);margin-top:8px;flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="hdr">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>PROYECTO J&F · CONTROL ROOM</h1>
+        <span>Suministro Gas Oil · Paraguay <b style="color:#a78bfa">⇄</b> Bolivia · 55.000 m³/mes</span>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <span class="live"><span class="pulse" id="pulse"></span> <span id="syncStatus">LIVE</span> · <span id="clock">--:--:--</span></span>
+      <span id="today">--</span>
+      <button class="btn" id="btnSync" style="padding:6px 12px;font-size:11px">Sincronizar Drive</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- SYNC PANEL -->
+    <div class="card" id="syncPanel" style="padding:10px 14px">
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px">
+          <div style="font-size:11px;color:var(--sub);letter-spacing:1.1px;text-transform:uppercase;font-weight:600">Fuente de datos · Google Sheets</div>
+          <div style="font-size:12px;color:var(--mut);margin-top:2px">
+            Seguimiento_Cargas_GasOil_JF ·
+            <a href="https://docs.google.com/spreadsheets/d/1I0CDw1ZgsHIrE7yyBML0Ljvycsx-GBuzViE8S3S38Kg/edit" target="_blank">abrir en Drive ↗</a>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--mut);flex-wrap:wrap">
+          <label style="display:inline-flex;gap:5px;align-items:center;padding:5px 10px;border:1px solid var(--line);border-radius:5px;background:#0b1119"><input type="checkbox" id="autoRefresh" checked> Auto-refresh 5 min</label>
+          <input type="hidden" id="sheetId" value="1I0CDw1ZgsHIrE7yyBML0Ljvycsx-GBuzViE8S3S38Kg">
+          <input type="hidden" id="gidCron" value="1051424193">
+        </div>
+      </div>
+      <div id="syncMsg" style="font-size:11.5px;color:var(--mut);margin-top:8px"></div>
+    </div>
+
+    <!-- HERO KPIs -->
+    <div class="row r-hero" id="hero"></div>
+
+    <!-- MID: Ciclo activo + Gauges + Alertas -->
+    <div class="row r-mid">
+      <div class="card spot" id="spot"></div>
+
+      <div class="card">
+        <h3>OCUPACIÓN TERMINALES · TIEMPO REAL</h3>
+        <div class="sub">m³ actualmente en cada terminal vs. capacidad dedicada</div>
+        <div class="gauges" id="gauges"></div>
+        <div class="legend">
+          <span><i style="background:var(--ok)"></i>Utilización sana &lt;80%</span>
+          <span><i style="background:var(--warn)"></i>80-95%</span>
+          <span><i style="background:var(--bad)"></i>&gt;95% / al tope</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>ALERTAS OPERATIVAS <span id="alcount" style="color:var(--warn)"></span></h3>
+        <div class="feed" id="feed"></div>
+      </div>
+    </div>
+
+    <!-- Semáforo grid + Colchón Petropar -->
+    <div class="row r-charts">
+      <div class="card">
+        <h3>MATRIZ DE ESTADO · 12 CICLOS (Bolivia · Local)</h3>
+        <div class="sub">Cada celda: barra superior = Bolivia, inferior = Local. Verde en tiempo · Amarillo excede meta 27 d · Rojo excede ventana operativa / IDA</div>
+        <div class="sfgrid" id="sfgrid"></div>
+      </div>
+      <div class="card">
+        <h3>COLCHÓN PETROPAR · CONTINGENCIA COMPARTIDA</h3>
+        <div class="sub">30.000 m³ compartidos entre Petrosan, Fuel Par e Integral</div>
+        <canvas id="petroparChart" height="150"></canvas>
+      </div>
+    </div>
+
+    <!-- Timeline Gantt -->
+    <div class="card">
+      <h3>CRONOGRAMA DE CICLOS · 12 MESES <span style="color:var(--sub);letter-spacing:0;font-size:10.5px;text-transform:none">Tránsito ▪ Ventana meta 27 d ▪ Ventana IDA 60 d</span></h3>
+      <div class="gantt">
+        <div class="gantt-wrap">
+          <div class="month-hd" id="ganttMonths"></div>
+          <div id="gantt"></div>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i class="b-nav" style="background:linear-gradient(90deg,#38bdf8,#0ea5e9)"></i>Tránsito fluvial (13 d ref)</span>
+        <span><i class="b-win" style="background:#22c55e"></i>Ventana retiro meta interna (27 d)</span>
+        <span><i class="b-ida" style="background:#f59e0b"></i>Colchón contractual IDA (hasta 60 d)</span>
+      </div>
+    </div>
+
+    <!-- Charts + Tabla -->
+    <div class="row r-btm">
+      <div class="card">
+        <h3>AVANCE ACUMULADO · PLAN vs. REAL</h3>
+        <div class="sub">m³ retirados a Bolivia y despachados en Local acumulados por ciclo</div>
+        <canvas id="progressChart" height="180"></canvas>
+      </div>
+      <div class="card">
+        <h3>CADENCIA DE TRÁNSITO · DÍAS POR CICLO</h3>
+        <div class="sub">Día 0 = carga en Argentina · Banda ideal 10–15 d · Ref. 13 d</div>
+        <canvas id="cadenceChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Detalle + Editor -->
+    <div class="card">
+      <h3>DETALLE OPERATIVO POR CICLO</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>#</th><th>Carga AR</th><th>Llegada est.</th><th>Llegada real</th><th>Días tránsito</th>
+          <th>Meta retiro</th><th>Límite operativo</th><th>Límite IDA</th>
+          <th>Bolivia · m³ retirado</th><th>%</th>
+          <th>Local · m³ despachado</th><th>%</th>
+          <th>Colchón m³</th>
+          <th>Estado BO</th><th>Estado LC</th>
+        </tr>
+        </thead>
+        <tbody id="tblCycles"></tbody>
+      </table>
+    </div>
+
+    <div class="card editor">
+      <h3>EDITAR DATOS REALES · SE RECALCULA EN VIVO</h3>
+      <div class="sub">Fecha real de llegada + m³ retirados a Bolivia + m³ despachados en Local + uso de colchón Petropar (por ciclo)</div>
+      <table>
+        <thead><tr>
+          <th>Ciclo</th><th>Carga Argentina</th><th>Llegada real</th>
+          <th>m³ retirados Bolivia</th><th>m³ despachados Local</th><th>m³ colchón Petropar</th>
+        </tr></thead>
+        <tbody id="editorTbl"></tbody>
+      </table>
+      <div class="toolbar">
+        <button class="btn ghost" id="btnReset">Volver al plan</button>
+        <button class="btn ghost" id="btnExport">Exportar JSON</button>
+        <button class="btn" id="btnRecalc">Recalcular todo</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    Fuente: Seguimiento_Cargas_GasOil_JF.xlsx · Proyecto J&F · Datos se guardan en el navegador — para uso "live" real desde Google Drive, publicar la planilla como JSON o conectar Google Sheets.
+  </footer>
+</div>
+
+<script>
+/* ================== PARÁMETROS DEL PROYECTO ================== */
+const P = {
+  volBolivia: 40000, volLocal: 15000, total: 55000,
+  capPetrosan: 20000, capFuelPar: 20000, capIntegral: 15000, capPetropar: 30000,
+  flotaMercurio: 30000, flotaNavios: 20000, flotaRockTree: 20000,
+  transitoMin: 10, transitoMax: 15, transitoRef: 13,
+  retornoBarcazas: 5, cadencia: 30,
+  metaRetiro: 27, idaMin: 30, idaMax: 60,
+  ventanaOperativa: 30,
+  cicloInicio: "2026-07-13"
+};
+
+/* Ciclos plan: 12 ciclos mensuales. */
+function buildPlan(){
+  const arr=[]; const d0=new Date(P.cicloInicio);
+  for(let i=0;i<12;i++){
+    const carga=new Date(d0); carga.setDate(d0.getDate()+i*P.cadencia);
+    arr.push({
+      ciclo:i+1,
+      cargaArg: fmt(carga),
+      volBolivia:P.volBolivia, volLocal:P.volLocal,
+      llegadaReal:"", retiroBolivia:0, despachoLocal:0, colchonPetropar:0
+    });
+  }
+  return arr;
+}
+
+/* Storage local */
+const KEY="jf_dashboard_v1";
+const KEY_CFG="jf_dashboard_cfg_v1";
+let DATA=load()||buildPlan();
+
+function load(){try{const j=localStorage.getItem(KEY);return j?JSON.parse(j):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DATA))}catch(e){}}
+function loadCfg(){try{return JSON.parse(localStorage.getItem(KEY_CFG))||{}}catch(e){return{}}}
+function saveCfg(){try{localStorage.setItem(KEY_CFG,JSON.stringify({id:document.getElementById("sheetId").value,gid:document.getElementById("gidCron").value}))}catch(e){}}
+
+/* ================== HELPERS ================== */
+function fmt(d){return d.toISOString().slice(0,10)}
+function toDate(s){return s?new Date(s+"T00:00:00"):null}
+function addD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function daysBetween(a,b){return Math.floor((b-a)/(1000*60*60*24))}
+function fmtDate(s){if(!s)return "—";const d=toDate(s);const m=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];return d.getDate().toString().padStart(2,"0")+"-"+m[d.getMonth()]+"-"+d.getFullYear().toString().slice(-2)}
+function fmtNum(n){return (n||0).toLocaleString("es-PY",{maximumFractionDigits:0})}
+function fmtPct(n){return ((n||0)*100).toFixed(1)+"%"}
+
+/* ================== CÁLCULOS POR CICLO ================== */
+function enrich(c, TODAY){
+  const carga=toDate(c.cargaArg);
+  const llegadaEst=addD(carga,P.transitoRef);
+  const llegadaMin=addD(carga,P.transitoMin);
+  const llegadaMax=addD(carga,P.transitoMax);
+  const llegada=c.llegadaReal?toDate(c.llegadaReal):llegadaEst;
+  const diasTransito=c.llegadaReal?daysBetween(carga,llegada):P.transitoRef;
+  const metaRetiro=addD(llegada,P.metaRetiro);
+  const limOp=addD(llegada,P.ventanaOperativa);
+  const limIda=addD(llegada,P.idaMax);
+  const pctBo=c.retiroBolivia/c.volBolivia;
+  const pctLo=c.despachoLocal/c.volLocal;
+
+  let estBo, estLo;
+  if(c.volBolivia===0) estBo={l:"n/a",c:"nul"};
+  else if(pctBo>=1) estBo={l:"Completado",c:"ok"};
+  else if(!c.llegadaReal && TODAY<carga) estBo={l:"En curso plan",c:"nul"};
+  else if(!c.llegadaReal) estBo={l:"En tránsito",c:"nul"};
+  else if(TODAY>limIda) estBo={l:"CRÍTICO · excede IDA",c:"bad"};
+  else if(TODAY>limOp) estBo={l:"CRÍTICO · próx. llegada",c:"bad"};
+  else if(TODAY>metaRetiro) estBo={l:"En riesgo · &gt;27 d",c:"warn"};
+  else estBo={l:"En tiempo",c:"ok"};
+
+  if(c.volLocal===0) estLo={l:"n/a",c:"nul"};
+  else if(pctLo>=1) estLo={l:"Completado",c:"ok"};
+  else if(!c.llegadaReal && TODAY<carga) estLo={l:"En curso plan",c:"nul"};
+  else if(!c.llegadaReal) estLo={l:"En tránsito",c:"nul"};
+  else if(TODAY>limOp) estLo={l:"CRÍTICO · próx. carga en puerto",c:"bad"};
+  else if(TODAY>metaRetiro) estLo={l:"En riesgo · &gt;27 d",c:"warn"};
+  else estLo={l:"En tiempo",c:"ok"};
+
+  const diasEnTerminal = c.llegadaReal ? daysBetween(llegada,TODAY) : null;
+  return {...c, carga, llegadaEst, llegadaMin, llegadaMax, llegada, diasTransito, metaRetiro, limOp, limIda, pctBo, pctLo, estBo, estLo, diasEnTerminal};
+}
+
+function computeAll(){
+  const TODAY=new Date(); TODAY.setHours(0,0,0,0);
+  return DATA.map(c=>enrich(c,TODAY));
+}
+
+/* ================== RENDER: HERO KPIs ================== */
+function renderHero(rows){
+  const TODAY=new Date();TODAY.setHours(0,0,0,0);
+  const boPlanAcum=rows.reduce((s,c)=>s+c.volBolivia,0);
+  const loPlanAcum=rows.reduce((s,c)=>s+c.volLocal,0);
+  const boReal=rows.reduce((s,c)=>s+c.retiroBolivia,0);
+  const loReal=rows.reduce((s,c)=>s+c.despachoLocal,0);
+  const cicloAct=rows.find(c=>TODAY>=c.carga && TODAY<=c.limIda)||rows[0];
+  const inRiesgo=rows.filter(c=>c.estBo.c==="warn"||c.estBo.c==="bad"||c.estLo.c==="warn"||c.estLo.c==="bad").length;
+  const colchon=rows.reduce((s,c)=>s+c.colchonPetropar,0);
+  const otifPast=rows.filter(c=>c.llegadaReal);
+  const otif = otifPast.length===0 ? null : otifPast.filter(c=>c.estBo.c==="ok"||c.estBo.l==="Completado").length/otifPast.length;
+  const flotaUt=P.total/(P.flotaMercurio+P.flotaNavios+P.flotaRockTree);
+
+  const kpis=[
+    {t:"Volumen mensual plan",v:fmtNum(P.total),u:"m³",foot:`Bolivia ${fmtNum(P.volBolivia)} · Local ${fmtNum(P.volLocal)}`,delta:"12 ciclos",dc:"d-info"},
+    {t:"Avance retiro Bolivia",v:fmtPct(boReal/boPlanAcum),u:"",foot:`${fmtNum(boReal)} / ${fmtNum(boPlanAcum)} m³`,bar:boReal/boPlanAcum,delta:(boReal/boPlanAcum>=0.9?"On track":"Behind"),dc:(boReal/boPlanAcum>=0.9?"d-ok":"d-warn")},
+    {t:"Avance despacho Local",v:fmtPct(loReal/loPlanAcum),u:"",foot:`${fmtNum(loReal)} / ${fmtNum(loPlanAcum)} m³`,bar:loReal/loPlanAcum,delta:(loReal/loPlanAcum>=0.9?"On track":"Behind"),dc:(loReal/loPlanAcum>=0.9?"d-ok":"d-warn")},
+    {t:"OTIF Bolivia · retiro ≤27 d",v: otif===null?"—":fmtPct(otif),u:"",foot: otif===null?"Sin ciclos con llegada real":`${otifPast.length} ciclo(s) evaluados`,delta:(otif===null?"n/a":otif>=0.9?"World-class":otif>=0.7?"Aceptable":"Riesgo"),dc:(otif===null?"d-info":otif>=0.9?"d-ok":otif>=0.7?"d-warn":"d-bad")},
+    {t:"Colchón Petropar usado",v:fmtNum(colchon),u:"m³",foot:`de ${fmtNum(P.capPetropar)} m³ disponibles · ${fmtPct(colchon/P.capPetropar)}`,bar:colchon/P.capPetropar,delta:(colchon/P.capPetropar<0.3?"Sano":colchon/P.capPetropar<0.7?"Uso medio":"Agotándose"),dc:(colchon/P.capPetropar<0.3?"d-ok":colchon/P.capPetropar<0.7?"d-warn":"d-bad")},
+    {t:"Ciclos con alerta",v:inRiesgo,u:"de 12",foot:`Flota utilizada ${(flotaUt*100).toFixed(0)}% · Holgura ${fmtNum(P.flotaMercurio+P.flotaNavios+P.flotaRockTree-P.total)} m³`,delta:(inRiesgo===0?"Verde":inRiesgo<=2?"Vigilar":"Acción"),dc:(inRiesgo===0?"d-ok":inRiesgo<=2?"d-warn":"d-bad")}
+  ];
+  document.getElementById("hero").innerHTML=kpis.map(k=>`
+    <div class="card">
+      <h3>${k.t}<span class="delta ${k.dc}">${k.delta}</span></h3>
+      <div class="big">${k.v}<span class="unit">${k.u}</span></div>
+      ${k.bar!==undefined?`<div class="bar"><span style="width:${Math.min(100,k.bar*100)}%"></span></div>`:""}
+      <div class="foot"><span>${k.foot}</span></div>
+    </div>`).join("");
+}
+
+/* ================== RENDER: CICLO ACTIVO ================== */
+function renderSpot(rows){
+  const TODAY=new Date();TODAY.setHours(0,0,0,0);
+  let c=rows.find(x=>TODAY>=x.carga && TODAY<=x.limIda);
+  if(!c) c=rows.find(x=>TODAY<x.carga)||rows[rows.length-1];
+  const diasHastaMeta=daysBetween(TODAY,c.metaRetiro);
+  const diasHastaOp=daysBetween(TODAY,c.limOp);
+  const diasHastaIda=daysBetween(TODAY,c.limIda);
+  document.getElementById("spot").innerHTML=`
+    <h3>CICLO ACTIVO · #${c.ciclo} <span class="delta d-info">${fmtDate(c.cargaArg)} → ${fmtDate(fmt(c.limIda))}</span></h3>
+    <div class="grid">
+      <div class="kpi"><h4>Bolivia · retiro</h4>
+        <div class="v">${fmtNum(c.retiroBolivia)} <span style="font-size:11px;color:var(--sub)">/ ${fmtNum(c.volBolivia)} m³</span></div>
+        <div class="bar"><span style="width:${Math.min(100,c.pctBo*100)}%;background:linear-gradient(90deg,var(--ok),var(--info))"></span></div>
+        <div class="s">${fmtPct(c.pctBo)} completado · faltan ${fmtNum(c.volBolivia-c.retiroBolivia)} m³</div>
+      </div>
+      <div class="kpi"><h4>Local · despacho</h4>
+        <div class="v">${fmtNum(c.despachoLocal)} <span style="font-size:11px;color:var(--sub)">/ ${fmtNum(c.volLocal)} m³</span></div>
+        <div class="bar"><span style="width:${Math.min(100,c.pctLo*100)}%;background:linear-gradient(90deg,var(--accent),var(--info))"></span></div>
+        <div class="s">${fmtPct(c.pctLo)} completado · faltan ${fmtNum(c.volLocal-c.despachoLocal)} m³</div>
+      </div>
+      <div class="kpi"><h4>Días hasta meta interna (27 d)</h4>
+        <div class="v" style="color:${diasHastaMeta<0?"var(--bad)":diasHastaMeta<5?"var(--warn)":"var(--ok)"}">${diasHastaMeta} d</div>
+        <div class="s">Meta: ${fmtDate(fmt(c.metaRetiro))}</div>
+      </div>
+      <div class="kpi"><h4>Días hasta llegada ciclo siguiente</h4>
+        <div class="v" style="color:${diasHastaOp<0?"var(--bad)":diasHastaOp<7?"var(--warn)":"var(--ok)"}">${diasHastaOp} d</div>
+        <div class="s">Límite operativo: ${fmtDate(fmt(c.limOp))}</div>
+      </div>
+      <div class="kpi"><h4>Días hasta límite legal IDA (60 d)</h4>
+        <div class="v">${diasHastaIda} d</div>
+        <div class="s">Techo IDA: ${fmtDate(fmt(c.limIda))}</div>
+      </div>
+      <div class="kpi"><h4>Días en terminal</h4>
+        <div class="v">${c.diasEnTerminal!==null?c.diasEnTerminal+" d":"—"}</div>
+        <div class="s">Llegada real: ${c.llegadaReal?fmtDate(c.llegadaReal):"pendiente"}</div>
+      </div>
+    </div>
+    <div class="semrow">
+      <div class="sem ${c.estBo.c}">Bolivia<span>${c.estBo.l}</span></div>
+      <div class="sem ${c.estLo.c}">Local<span>${c.estLo.l}</span></div>
+    </div>`;
+}
+
+/* ================== RENDER: GAUGES TERMINALES ================== */
+function gaugeSVG(pct,color){
+  const r=32, c=2*Math.PI*r; const off=c*(1-pct);
+  return `<svg viewBox="0 0 80 80">
+    <circle cx="40" cy="40" r="${r}" stroke="#1a2432" stroke-width="8" fill="none"/>
+    <circle cx="40" cy="40" r="${r}" stroke="${color}" stroke-width="8" fill="none"
+      stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round"
+      transform="rotate(-90 40 40)"/>
+    <text x="40" y="45" text-anchor="middle" fill="#e6edf6" font-size="16" font-weight="700">${Math.round(pct*100)}%</text>
+  </svg>`;
+}
+function renderGauges(rows){
+  const TODAY=new Date();TODAY.setHours(0,0,0,0);
+  const c=rows.find(x=>TODAY>=x.carga && TODAY<=x.limIda)||rows[0];
+  const enPetrosan = c.llegadaReal ? Math.max(0, (c.volBolivia/2) - (c.retiroBolivia/2)) : 0;
+  const enFuelPar  = c.llegadaReal ? Math.max(0, (c.volBolivia/2) - (c.retiroBolivia/2)) : 0;
+  const enIntegral = c.llegadaReal ? Math.max(0, c.volLocal - c.despachoLocal) : 0;
+  const colUsed = rows.reduce((s,x)=>s+x.colchonPetropar,0);
+  const items=[
+    {n:"Petrosan",val:enPetrosan,cap:P.capPetrosan,tag:"Bolivia"},
+    {n:"Fuel Par",val:enFuelPar,cap:P.capFuelPar,tag:"Bolivia"},
+    {n:"Integral",val:enIntegral,cap:P.capIntegral,tag:"Local"},
+    {n:"Petropar",val:colUsed,cap:P.capPetropar,tag:"Contingencia"}
+  ];
+  document.getElementById("gauges").innerHTML=items.map(g=>{
+    const pct=g.val/g.cap; const col=pct<0.8?"#22c55e":pct<0.95?"#f59e0b":"#ef4444";
+    return `<div class="gauge">
+      <div class="nm">${g.n}<br><span style="color:var(--mut);font-weight:400">${g.tag}</span></div>
+      ${gaugeSVG(pct,col)}
+      <div class="vl">${fmtNum(g.val)}<span style="color:var(--sub);font-size:11px"> / ${fmtNum(g.cap)}</span></div>
+    </div>`;
+  }).join("");
+}
+
+/* ================== RENDER: MATRIZ SEMAFORO ================== */
+function renderSFGrid(rows){
+  const el=document.getElementById("sfgrid");
+  el.innerHTML=rows.map(c=>{
+    const b=c.estBo.c==="nul"?"":c.estBo.c;
+    const l=c.estLo.c==="nul"?"":c.estLo.c;
+    const t=`Ciclo ${c.ciclo}\nCarga ${fmtDate(c.cargaArg)}\nBolivia: ${c.estBo.l.replace(/&gt;/g,">")}\nLocal: ${c.estLo.l.replace(/&gt;/g,">")}`;
+    return `<div class="sfcell" title="${t}">
+      <div class="n">C${c.ciclo}</div>
+      <div class="d"><span class="${b}"></span></div>
+      <div class="d"><span class="${l}"></span></div>
+    </div>`;
+  }).join("");
+}
+
+/* ================== RENDER: FEED DE ALERTAS ================== */
+function renderFeed(rows){
+  const TODAY=new Date();TODAY.setHours(0,0,0,0);
+  const items=[];
+  rows.forEach(c=>{
+    if(c.estBo.c==="bad") items.push({sev:"bad",t:`Ciclo #${c.ciclo} · Bolivia CRÍTICO`,m:`Excede ${c.estBo.l.replace("CRÍTICO · ","")}. Retirado ${fmtPct(c.pctBo)}.`,a:"Activar despacho urgente + evaluar Petropar"});
+    else if(c.estBo.c==="warn") items.push({sev:"warn",t:`Ciclo #${c.ciclo} · Bolivia en riesgo`,m:`Excede meta interna 27 d. Retirado ${fmtPct(c.pctBo)}.`,a:"Priorizar retiro esta semana"});
+    if(c.estLo.c==="bad") items.push({sev:"bad",t:`Ciclo #${c.ciclo} · Local CRÍTICO`,m:`Excede ventana operativa. Despachado ${fmtPct(c.pctLo)}.`,a:"Coordinar distribuidoras + colchón"});
+    else if(c.estLo.c==="warn") items.push({sev:"warn",t:`Ciclo #${c.ciclo} · Local en riesgo`,m:`Excede meta interna 27 d. Despachado ${fmtPct(c.pctLo)}.`,a:"Acelerar despachos"});
+    if(c.llegadaReal && c.diasTransito>P.transitoMax) items.push({sev:"warn",t:`Ciclo #${c.ciclo} · Tránsito prolongado`,m:`${c.diasTransito} días vs. rango 10–15 d.`,a:"Revisar navegabilidad Hidrovía"});
+  });
+  const colTot=rows.reduce((s,c)=>s+c.colchonPetropar,0);
+  if(colTot/P.capPetropar>0.7) items.push({sev:"bad",t:"Colchón Petropar > 70% usado",m:`Quedan ${fmtNum(P.capPetropar-colTot)} m³ de contingencia.`,a:"Alertar dirección · plan de restauración"});
+  else if(colTot>0) items.push({sev:"info",t:"Colchón Petropar en uso",m:`${fmtNum(colTot)} m³ activos · ${fmtPct(colTot/P.capPetropar)} de la reserva.`,a:"Documentar causa raíz"});
+  if(items.length===0) items.push({sev:"ok",t:"Todos los ciclos en verde",m:"No hay desviaciones ni excedencias de plazo.",a:"Mantener cadencia mensual"});
+  document.getElementById("alcount").textContent = items.filter(i=>i.sev==="bad"||i.sev==="warn").length ? `● ${items.filter(i=>i.sev==="bad"||i.sev==="warn").length}` : "";
+  document.getElementById("feed").innerHTML=items.map(i=>`
+    <div class="alrt"><div class="ic ${i.sev}"></div>
+      <div class="b"><div class="t">${i.t}</div><div class="m">${i.m}</div><div class="a">→ ${i.a}</div></div>
+    </div>`).join("");
+}
+
+/* ================== RENDER: GANTT TIMELINE ================== */
+function renderGantt(rows){
+  const TODAY=new Date();TODAY.setHours(0,0,0,0);
+  const t0=rows[0].carga;
+  const tEnd=addD(rows[rows.length-1].limIda,15);
+  const totalDays=daysBetween(t0,tEnd);
+  const pct=(d)=>Math.max(0,Math.min(100,(daysBetween(t0,d)/totalDays)*100));
+
+  // Cabecera meses
+  let months=[];
+  let cur=new Date(t0.getFullYear(),t0.getMonth(),1);
+  const nm=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  while(cur<=tEnd){ months.push(new Date(cur)); cur.setMonth(cur.getMonth()+1); }
+  document.getElementById("ganttMonths").style.gridTemplateColumns=`80px repeat(${months.length},1fr)`;
+  document.getElementById("ganttMonths").innerHTML=`<div></div>`+months.map(m=>`<div>${nm[m.getMonth()]} '${m.getFullYear().toString().slice(-2)}</div>`).join("");
+
+  const html=rows.map(c=>{
+    const left=pct(c.llegada);
+    const wTr=pct(c.llegada)-pct(c.carga);
+    const wWin=pct(c.metaRetiro)-pct(c.llegada);
+    const wIda=pct(c.limIda)-pct(c.metaRetiro);
+    const isCrit = c.estBo.c==="bad"||c.estLo.c==="bad";
+    return `<div class="row-g">
+      <div class="lbl">Ciclo ${c.ciclo}</div>
+      <div class="track">
+        <div class="bar b-nav" style="left:${pct(c.carga)}%;width:${wTr}%">🚢 ${c.diasTransito} d</div>
+        <div class="bar b-win" style="left:${pct(c.llegada)}%;width:${wWin}%">📦 27 d</div>
+        <div class="bar b-ida ${isCrit?"b-crit":""}" style="left:${pct(c.metaRetiro)}%;width:${wIda}%;top:19px;height:12px">IDA</div>
+      </div>
+    </div>`;
+  }).join("");
+  const todayPct=pct(TODAY);
+  document.getElementById("gantt").innerHTML=html+`<div style="position:absolute" id="tl"></div>`;
+  // Añadir línea HOY vía CSS absoluto en cada .track — más simple con overlay:
+  document.querySelectorAll(".gantt .track").forEach(t=>{
+    if(todayPct>=0 && todayPct<=100){
+      const div=document.createElement("div");
+      div.className="today-line"; div.style.left=todayPct+"%";
+      t.appendChild(div);
+    }
+  });
+}
+
+/* ================== CHARTS ================== */
+let chartProgress, chartCadence, chartPetropar;
+function renderCharts(rows){
+  const labels=rows.map(c=>`C${c.ciclo}`);
+  let accBoPlan=0, accBoReal=0, accLoPlan=0, accLoReal=0;
+  const boPlan=[],boReal=[],loPlan=[],loReal=[];
+  rows.forEach(c=>{ accBoPlan+=c.volBolivia; accBoReal+=c.retiroBolivia; accLoPlan+=c.volLocal; accLoReal+=c.despachoLocal;
+    boPlan.push(accBoPlan); boReal.push(accBoReal); loPlan.push(accLoPlan); loReal.push(accLoReal); });
+
+  if(chartProgress) chartProgress.destroy();
+  chartProgress=new Chart(document.getElementById("progressChart"),{
+    type:"line",
+    data:{labels,datasets:[
+      {label:"Bolivia · Plan",data:boPlan,borderColor:"#38bdf8",borderDash:[4,4],pointRadius:0,tension:.2},
+      {label:"Bolivia · Real",data:boReal,borderColor:"#38bdf8",backgroundColor:"rgba(56,189,248,.15)",fill:true,tension:.25,pointRadius:2},
+      {label:"Local · Plan",data:loPlan,borderColor:"#a78bfa",borderDash:[4,4],pointRadius:0,tension:.2},
+      {label:"Local · Real",data:loReal,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,.15)",fill:true,tension:.25,pointRadius:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#8ea0b8",boxWidth:12,font:{size:11}}}},
+      scales:{
+        x:{ticks:{color:"#5b6d85",font:{size:11}},grid:{color:"#1a2432"}},
+        y:{ticks:{color:"#5b6d85",font:{size:11},callback:v=>v.toLocaleString("es-PY")},grid:{color:"#1a2432"}}
+      }
+    }
+  });
+
+  const cadReal=rows.map(c=>c.diasTransito);
+  if(chartCadence) chartCadence.destroy();
+  chartCadence=new Chart(document.getElementById("cadenceChart"),{
+    type:"bar",
+    data:{labels,datasets:[
+      {label:"Días tránsito",data:cadReal,backgroundColor:cadReal.map(v=>v>15?"#ef4444":v>13?"#f59e0b":"#22c55e"),borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        annotation:{}
+      },
+      scales:{
+        x:{ticks:{color:"#5b6d85",font:{size:11}},grid:{color:"#1a2432"}},
+        y:{min:0,max:20,ticks:{color:"#5b6d85",font:{size:11}},grid:{color:"#1a2432"}}
+      }
+    }
+  });
+
+  // Petropar chart: uso acumulado vs cap
+  const petroparUso=rows.map(c=>c.colchonPetropar);
+  const petroparAcum=[]; let acc=0; petroparUso.forEach(v=>{acc+=v;petroparAcum.push(acc)});
+  if(chartPetropar) chartPetropar.destroy();
+  chartPetropar=new Chart(document.getElementById("petroparChart"),{
+    type:"line",
+    data:{labels,datasets:[
+      {label:"Colchón usado acumulado",data:petroparAcum,borderColor:"#f59e0b",backgroundColor:"rgba(245,158,11,.2)",fill:true,pointRadius:3,tension:.3},
+      {label:"Capacidad Petropar (30.000)",data:labels.map(()=>P.capPetropar),borderColor:"#ef4444",borderDash:[6,4],pointRadius:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#8ea0b8",boxWidth:12,font:{size:11}}}},
+      scales:{x:{ticks:{color:"#5b6d85"},grid:{color:"#1a2432"}},
+              y:{ticks:{color:"#5b6d85",callback:v=>v.toLocaleString("es-PY")},grid:{color:"#1a2432"}}}
+    }
+  });
+}
+
+/* ================== TABLA DETALLE ================== */
+function renderTable(rows){
+  const t=document.getElementById("tblCycles");
+  t.innerHTML=rows.map(c=>{
+    return `<tr>
+      <td><b>${c.ciclo}</b></td>
+      <td>${fmtDate(c.cargaArg)}</td>
+      <td>${fmtDate(fmt(c.llegadaEst))}</td>
+      <td>${c.llegadaReal?fmtDate(c.llegadaReal):"<span style='color:var(--sub)'>—</span>"}</td>
+      <td>${c.diasTransito} d</td>
+      <td>${fmtDate(fmt(c.metaRetiro))}</td>
+      <td>${fmtDate(fmt(c.limOp))}</td>
+      <td>${fmtDate(fmt(c.limIda))}</td>
+      <td>${fmtNum(c.retiroBolivia)}</td>
+      <td>${fmtPct(c.pctBo)}</td>
+      <td>${fmtNum(c.despachoLocal)}</td>
+      <td>${fmtPct(c.pctLo)}</td>
+      <td>${fmtNum(c.colchonPetropar)}</td>
+      <td><span class="pill ${c.estBo.c==="nul"?"mut":c.estBo.c}">${c.estBo.l.replace(/&gt;/g,">")}</span></td>
+      <td><span class="pill ${c.estLo.c==="nul"?"mut":c.estLo.c}">${c.estLo.l.replace(/&gt;/g,">")}</span></td>
+    </tr>`;
+  }).join("");
+}
+
+/* ================== EDITOR ================== */
+function renderEditor(){
+  const t=document.getElementById("editorTbl");
+  t.innerHTML=DATA.map((c,i)=>`<tr>
+    <td><b>${c.ciclo}</b></td>
+    <td><input type="date" data-i="${i}" data-k="cargaArg" value="${c.cargaArg}"></td>
+    <td><input type="date" data-i="${i}" data-k="llegadaReal" value="${c.llegadaReal||""}"></td>
+    <td><input type="number" min="0" max="40000" step="500" data-i="${i}" data-k="retiroBolivia" value="${c.retiroBolivia}"></td>
+    <td><input type="number" min="0" max="15000" step="500" data-i="${i}" data-k="despachoLocal" value="${c.despachoLocal}"></td>
+    <td><input type="number" min="0" max="30000" step="500" data-i="${i}" data-k="colchonPetropar" value="${c.colchonPetropar}"></td>
+  </tr>`).join("");
+  t.querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("change",e=>{
+      const i=+e.target.dataset.i, k=e.target.dataset.k;
+      DATA[i][k] = e.target.type==="number" ? +e.target.value : e.target.value;
+      save(); render();
+    });
+  });
+}
+
+/* ================== RENDER MAESTRO ================== */
+function render(){
+  const rows=computeAll();
+  renderHero(rows);
+  renderSpot(rows);
+  renderGauges(rows);
+  renderSFGrid(rows);
+  renderFeed(rows);
+  renderGantt(rows);
+  renderCharts(rows);
+  renderTable(rows);
+}
+
+/* ================== INIT ================== */
+document.getElementById("btnReset").onclick=()=>{ if(confirm("¿Restaurar valores de plan? Se perderán los datos ingresados.")){ DATA=buildPlan(); save(); renderEditor(); render(); } };
+document.getElementById("btnRecalc").onclick=()=>render();
+document.getElementById("btnExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="seguimiento_cargas_JF.json"; a.click();
+};
+
+/* ============== SYNC GOOGLE SHEETS ============== */
+function setSync(msg,ok){
+  const el=document.getElementById("syncMsg"); el.innerHTML=msg;
+  const p=document.getElementById("pulse"); const s=document.getElementById("syncStatus");
+  if(ok===true){ p.style.background="var(--ok)"; s.textContent="LIVE · SYNCED"; }
+  else if(ok===false){ p.style.background="var(--bad)"; s.textContent="OFFLINE"; }
+  else { p.style.background="var(--warn)"; s.textContent="SYNCING…"; }
+}
+function parseCSV(txt){
+  const rows=[]; let row=[]; let cur=""; let q=false;
+  for(let i=0;i<txt.length;i++){
+    const ch=txt[i];
+    if(q){ if(ch=='"'){ if(txt[i+1]=='"'){cur+='"';i++} else q=false } else cur+=ch }
+    else{
+      if(ch=='"') q=true;
+      else if(ch==','){ row.push(cur); cur="" }
+      else if(ch=='\n'){ row.push(cur); rows.push(row); row=[]; cur="" }
+      else if(ch=='\r'){}
+      else cur+=ch;
+    }
+  }
+  if(cur.length||row.length){ row.push(cur); rows.push(row) }
+  return rows;
+}
+function parseDate(s){
+  if(!s) return "";
+  s=s.trim();
+  // dd/mm/yyyy
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+  if(m){ let y=+m[3]; if(y<100) y+=2000; return `${y}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}` }
+  // yyyy-mm-dd
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m) return m[0];
+  // Serial number Excel-style — rare in CSV
+  const n=+s; if(!isNaN(n) && n>40000 && n<80000){
+    const d=new Date(Date.UTC(1899,11,30)+n*86400000);
+    return d.toISOString().slice(0,10);
+  }
+  const d=new Date(s); if(!isNaN(d)) return d.toISOString().slice(0,10);
+  return "";
+}
+function parseNum(s){ if(!s) return 0; s=String(s).replace(/[.\s]/g,"").replace(",","." ).replace(/[^\d.-]/g,""); const n=parseFloat(s); return isNaN(n)?0:n }
+
+async function syncDrive(){
+  const id=document.getElementById("sheetId").value.trim();
+  const gid=document.getElementById("gidCron").value.trim();
+  if(!id || !gid){ setSync("Pegá el Sheet ID y el gid para sincronizar. Mientras tanto se usa el plan / datos del editor.",false); return; }
+  saveCfg();
+  setSync("Consultando Google Sheets…",null);
+  const url=`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}`;
+  try{
+    const r=await fetch(url,{cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const txt=await r.text();
+    const rows=parseCSV(txt);
+    // Encontrar la fila cabecera (contiene "Ciclo" en col A)
+    let start=-1;
+    for(let i=0;i<rows.length;i++){
+      const v=(rows[i][0]||"").trim();
+      if(/^\d+$/.test(v)){ start=i; break }
+    }
+    if(start<0) throw new Error("No se detectaron filas de ciclos");
+    const out=[];
+    for(let i=start;i<rows.length && out.length<12;i++){
+      const r=rows[i]; if(!r[0] || !/^\d+$/.test(r[0].trim())) break;
+      // Columnas por índice según Excel: A=ciclo, B=cargaAR, H=llegada real, D=volBol, E=volLoc, O=retiroBo, Q=despLoc, V=colchon
+      // Índices 0=A, 1=B, 3=D, 4=E, 7=H, 14=O, 16=Q, 21=V
+      out.push({
+        ciclo:+r[0],
+        cargaArg: parseDate(r[1]||""),
+        volBolivia: parseNum(r[3]) || P.volBolivia,
+        volLocal:   parseNum(r[4]) || P.volLocal,
+        llegadaReal: parseDate(r[7]||""),
+        retiroBolivia: parseNum(r[14]),
+        despachoLocal: parseNum(r[16]),
+        colchonPetropar: parseNum(r[21])
+      });
+    }
+    if(out.length===0) throw new Error("Se leyó el CSV pero no se pudieron mapear ciclos");
+    DATA=out; save(); renderEditor(); render();
+    const stamp=new Date().toLocaleTimeString("es-PY",{hour12:false});
+    setSync(`✓ ${out.length} ciclos sincronizados desde Google Sheets · última sync ${stamp}`,true);
+  }catch(err){
+    setSync(`✗ No se pudo leer el Sheet (${err.message}). Verificá que esté compartido como <b>"Cualquiera con el enlace · Lector"</b> en Drive. Mientras tanto se usan los datos del editor.`,false);
+  }
+}
+document.getElementById("btnSync").onclick=syncDrive;
+let autoTimer=null;
+document.getElementById("autoRefresh").onchange=(e)=>{
+  if(autoTimer){clearInterval(autoTimer);autoTimer=null}
+  if(e.target.checked){ autoTimer=setInterval(syncDrive,300000); syncDrive(); }
+};
+// Sync inicial automático + auto-refresh cada 5 min por defecto
+setTimeout(syncDrive,600);
+autoTimer=setInterval(syncDrive,300000);
+
+function tick(){
+  const d=new Date();
+  document.getElementById("clock").textContent=d.toLocaleTimeString("es-PY",{hour12:false});
+  const nm=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  document.getElementById("today").textContent = `${d.getDate().toString().padStart(2,"0")}-${nm[d.getMonth()]}-${d.getFullYear()}`;
+}
+tick(); setInterval(tick,1000);
+renderEditor(); render();
+</script>
+</body>
+</html>
