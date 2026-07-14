@@ -2,398 +2,454 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1200, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<title>Proyecto J&F · Suministro estratégico Paraguay ⇄ Bolivia</title>
+<meta name="viewport" content="width=1400, user-scalable=no, initial-scale=1.0">
+<title>Proyecto J&F · Suministro estratégico Paraguay ⇄ Bolivia · Dynker</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,700;9..144,900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   TEMA EDITORIAL J&F · Investment-grade
+   DYNKER · Sistema visual tech-forward
+   Referencias: Stripe · Linear · Vercel
    ============================================================ */
 :root{
-  --serif:'Fraunces','Playfair Display','Georgia',serif;
-  --sans:'Inter','Helvetica Neue',system-ui,sans-serif;
-  --mono:'JetBrains Mono',monospace;
+  --ink:#0a0a0a;
+  --bg-dark:#0a0a0a;
+  --bg-light:#f9f9f7;
+  --card-light:#ffffff;
+  --card-dark:rgba(255,255,255,.03);
 
-  --ink:#0a0e14;
-  --paper:#f5f1e8;
-  --cream:#faf7ef;
-  --sand:#e8dfc9;
-  --gold:#b78a4a;
-  --gold-l:#d4a862;
-  --deep:#1a2438;
-  --forest:#0f3d2e;
-  --wine:#5c1c2a;
-  --sky:#1e5f8e;
-  --sky-l:#4a90c2;
+  --text-primary:#0a0a0a;
+  --text-secondary:#525252;
+  --text-tertiary:#a3a3a3;
+  --text-inv:#f5f5f5;
+  --text-inv-2:rgba(245,245,245,.62);
+  --text-inv-3:rgba(245,245,245,.32);
 
-  --slate-1:#f8f6f0;
-  --slate-2:#e5dfcf;
-  --slate-3:#8a8577;
-  --slate-4:#4a4a3f;
+  --border-light:#e5e5e5;
+  --border-dark:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.16);
+
+  --accent:#00d4ff;
+  --accent-dim:rgba(0,212,255,.14);
+  --alt:#a78bfa;
+  --alt-dim:rgba(167,139,250,.14);
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --bad:#ef4444;
+
+  --font-sans:'Inter','SF Pro Display',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
 }
 
-/* Reset Reveal defaults */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  font-family:var(--font-sans); color:var(--text-primary);
+  -webkit-font-smoothing:antialiased; font-feature-settings:"cv02","cv03","cv04","cv11","ss01";
+}
+
+/* RESETS reveal */
 .reveal, .reveal .slides section{
-  font-family:var(--sans);
-  color:var(--ink);
-  text-align:left;
-  font-weight:400;
+  font-family:var(--font-sans); text-align:left; font-weight:400; color:var(--text-primary);
 }
-.reveal .slides{text-align:left}
 .reveal h1,.reveal h2,.reveal h3,.reveal h4,.reveal h5{
-  font-family:var(--serif); font-weight:700; letter-spacing:-.02em;
-  color:inherit; text-transform:none; margin:0;
-  text-shadow:none;
+  font-family:var(--font-sans); font-weight:700; letter-spacing:-.028em;
+  color:inherit; text-transform:none; margin:0; text-shadow:none; line-height:1.03;
 }
-.reveal h1{font-size:5.8em; line-height:.98; font-weight:900; letter-spacing:-.03em}
-.reveal h2{font-size:3.4em; line-height:1.02; font-weight:800; margin-bottom:.5em}
-.reveal h3{font-size:1.4em; font-weight:500; color:var(--slate-3); margin-bottom:1.4em; max-width:22em}
-.reveal p{font-size:1em; line-height:1.55; margin:.7em 0}
-.reveal em{font-style:italic; font-family:var(--serif)}
+.reveal h1{font-size:5.4em; font-weight:800; letter-spacing:-.04em}
+.reveal h2{font-size:3.2em; font-weight:700; letter-spacing:-.032em; margin-bottom:.5em}
+.reveal h3{font-size:1.15em; font-weight:400; color:var(--text-secondary); max-width:38em; margin-bottom:2em; line-height:1.5}
+.reveal p{font-size:1em; line-height:1.55; color:var(--text-primary)}
+.reveal em{font-style:normal}
 .reveal strong{font-weight:700}
-.reveal a{color:var(--sky); text-decoration:none}
-.reveal .progress{color:var(--gold)}
-.reveal .controls{color:var(--slate-3)}
+.reveal a{color:var(--accent); text-decoration:none}
 
-/* Kickers y eyebrows */
+/* SECTION THEMES */
+.reveal .slides section{padding:70px 88px}
+.reveal .slides section.light{background:var(--bg-light); color:var(--text-primary)}
+.reveal .slides section.dark{
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(0,212,255,.09), transparent 55%),
+    radial-gradient(ellipse at 85% 80%, rgba(167,139,250,.06), transparent 55%),
+    var(--bg-dark);
+  color:var(--text-inv);
+}
+.reveal .slides section.grid-bg{
+  background:
+    linear-gradient(var(--border-light) 1px, transparent 1px) 0 0 / 60px 60px,
+    linear-gradient(90deg, var(--border-light) 1px, transparent 1px) 0 0 / 60px 60px,
+    var(--bg-light);
+  background-blend-mode:normal;
+}
+.reveal .slides section.dark h1, .reveal .slides section.dark h2{color:var(--text-inv)}
+.reveal .slides section.dark h3{color:var(--text-inv-2); font-weight:400}
+.reveal .slides section.dark p{color:var(--text-inv-2)}
+
+/* EYEBROW */
 .eyebrow{
-  font-family:var(--mono);
-  font-size:.72em; text-transform:uppercase;
-  letter-spacing:.28em; font-weight:600;
-  color:var(--gold); margin-bottom:2em;
-  display:inline-flex; align-items:center; gap:1.2em;
+  display:inline-flex; align-items:center; gap:14px;
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+  text-transform:uppercase; letter-spacing:.16em; color:var(--accent);
+  margin-bottom:28px;
 }
-.eyebrow::before{content:""; display:inline-block; width:2.4em; height:1px; background:var(--gold)}
-section.dark .eyebrow{color:var(--gold-l)}
-section.dark .eyebrow::before{background:var(--gold-l)}
+.eyebrow::before{content:""; width:24px; height:1px; background:var(--accent)}
 
-/* Estilos por sección (tema) */
-.reveal section{padding:70px 90px}
-
-.reveal .slides section.paper{background:var(--paper); color:var(--ink)}
-.reveal .slides section.cream{background:var(--cream); color:var(--ink)}
-.reveal .slides section.dark{background:var(--ink); color:var(--slate-1)}
-.reveal .slides section.deep{background:linear-gradient(160deg,#0a0e14 0%,#1a2438 60%,#0f3d2e 100%); color:var(--slate-1)}
-.reveal .slides section.wine{background:linear-gradient(140deg,#3d1420 0%,#5c1c2a 60%,#2a0e15 100%); color:var(--slate-1)}
-.reveal .slides section.forest{background:linear-gradient(150deg,#082a20 0%,#0f3d2e 60%,#051d17 100%); color:var(--slate-1)}
-.reveal .slides section.slate{background:linear-gradient(180deg,#f8f6f0 0%,#e5dfcf 100%); color:var(--ink)}
-
-/* Force headings on dark backgrounds to be legible */
-.reveal .slides section.dark h1, .reveal .slides section.dark h2,
-.reveal .slides section.deep h1, .reveal .slides section.deep h2,
-.reveal .slides section.wine h1, .reveal .slides section.wine h2,
-.reveal .slides section.forest h1, .reveal .slides section.forest h2{color:var(--slate-1)}
-
-.reveal .slides section.dark h3, .reveal .slides section.deep h3,
-.reveal .slides section.wine h3, .reveal .slides section.forest h3{color:rgba(255,255,255,.6)}
-
-/* HERO cover */
-.hero-wrap{position:relative; height:100vh; display:flex; flex-direction:column; justify-content:center; padding:0}
-.hero-wrap .top{position:absolute; top:44px; left:90px; right:90px; display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; letter-spacing:.24em; color:rgba(255,255,255,.5); text-transform:uppercase}
-.hero-wrap .bottom{position:absolute; bottom:44px; left:90px; right:90px; display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; letter-spacing:.24em; color:rgba(255,255,255,.5); text-transform:uppercase}
-.hero-wrap h1{padding:0 90px; max-width:14em}
-.hero-wrap .lede{padding:36px 90px 0; font-family:var(--serif); font-size:1.4em; font-weight:400; color:rgba(255,255,255,.75); max-width:24em; line-height:1.45; font-style:italic}
-.hero-wrap .maptexture{position:absolute; right:-100px; top:50%; transform:translateY(-50%); width:900px; height:900px; opacity:.06; pointer-events:none; z-index:0}
-
-/* Big number spread */
-.number-spread{display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; padding-top:20px}
-.number-spread .huge{font-family:var(--serif); font-weight:900; font-size:14em; line-height:.85; letter-spacing:-.05em; color:var(--gold)}
-.number-spread .huge .unit{font-size:.24em; letter-spacing:.15em; font-weight:600; color:var(--slate-3); text-transform:uppercase; display:block; margin-top:.5em; font-family:var(--mono)}
-
-/* Editorial split */
-.split-editorial{display:grid; grid-template-columns:5fr 4fr; gap:80px; align-items:start; padding-top:20px}
-.split-editorial .side-text{font-family:var(--serif); font-weight:400; font-size:1.4em; line-height:1.5; color:var(--slate-4)}
-.split-editorial .side-text.dark{color:rgba(255,255,255,.75)}
-.split-editorial .side-note{font-size:.95em; color:var(--slate-3); line-height:1.55}
-
-/* Data table editorial */
-.rule-top{border-top:1px solid var(--slate-4); padding-top:1em}
-.rule-btm{border-bottom:1px solid var(--slate-4); padding-bottom:1em}
-section.dark .rule-top, section.dark .rule-btm, section.deep .rule-top, section.deep .rule-btm{border-color:rgba(255,255,255,.15)}
-
-.editorial-table{width:100%; border-collapse:collapse; font-family:var(--sans); margin-top:1em}
-.editorial-table th{
-  font-family:var(--mono); font-size:.62em; letter-spacing:.2em; text-transform:uppercase;
-  color:var(--slate-3); text-align:left; padding:16px 12px 8px; border-bottom:1px solid var(--slate-3); font-weight:600
+/* MONO LABEL */
+.mono-label{
+  font-family:var(--font-mono); font-size:10.5px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--text-tertiary);
 }
-.editorial-table td{padding:22px 12px; border-bottom:1px solid rgba(0,0,0,.08); font-size:.95em; vertical-align:top}
-section.dark .editorial-table td, section.deep .editorial-table td, section.wine .editorial-table td, section.forest .editorial-table td{border-color:rgba(255,255,255,.1)}
-.editorial-table td.num{font-family:var(--mono); text-align:right; font-variant-numeric:tabular-nums; font-size:1.1em; font-weight:600; color:var(--gold)}
-.editorial-table td strong{font-weight:700}
-.editorial-table td .lbl{font-size:.75em; color:var(--slate-3); margin-top:4px}
+.dark .mono-label{color:var(--text-inv-3)}
 
-/* Pull quote */
-.pull{
-  font-family:var(--serif); font-style:italic; font-size:3em; line-height:1.15;
-  font-weight:400; letter-spacing:-.02em; max-width:22em; position:relative; padding-left:.7em;
+/* PILL */
+.pill{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 12px; border:1px solid var(--border-light); border-radius:100px;
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+  letter-spacing:.05em; color:var(--text-secondary); background:#fff;
 }
-.pull::before{content:"\201C"; position:absolute; left:-.1em; top:-.3em; font-size:2em; color:var(--gold); font-style:normal}
-.pull .cite{display:block; margin-top:1.2em; font-family:var(--mono); font-size:.24em; color:var(--slate-3); letter-spacing:.24em; text-transform:uppercase; font-style:normal}
-section.dark .pull .cite, section.deep .pull .cite{color:rgba(255,255,255,.6)}
+.pill.dark, .dark .pill{border-color:var(--border-strong); color:var(--text-inv-2); background:transparent}
+.pill.accent{background:var(--accent-dim); border-color:transparent; color:var(--accent)}
+.dark .pill.accent{background:var(--accent-dim); border-color:transparent; color:var(--accent)}
 
-/* Flow diagram editorial */
-.flow-e{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:60px}
-.flow-e .box{background:var(--cream); border:1px solid var(--sand); padding:24px 22px; border-radius:2px; position:relative}
-section.dark .flow-e .box, section.deep .flow-e .box{background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.1)}
-.flow-e .box .num{font-family:var(--mono); font-size:.55em; letter-spacing:.24em; color:var(--gold); font-weight:600; text-transform:uppercase; margin-bottom:14px}
-.flow-e .box .nm{font-family:var(--serif); font-size:1.5em; font-weight:700; line-height:1.05; margin-bottom:8px}
-.flow-e .box .d{font-size:.7em; line-height:1.5; color:var(--slate-3)}
-.flow-e .arr{display:flex; align-items:center; justify-content:center; font-size:2em; color:var(--gold); font-weight:300}
+/* ============ COVER · Portada hero ============ */
+.hero{
+  position:relative; height:100vh; padding:0 !important;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.hero .top-bar, .hero .btm-bar{
+  position:absolute; left:88px; right:88px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--text-inv-3);
+}
+.hero .top-bar{top:36px}
+.hero .btm-bar{bottom:56px}
+.hero .top-bar b, .hero .btm-bar b{color:var(--accent); font-weight:600; letter-spacing:.28em}
+.hero .content{padding:0 88px; max-width:1300px}
+.hero .kicker{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:6px 14px 6px 10px; border:1px solid var(--border-strong); border-radius:100px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--text-inv-2); background:rgba(255,255,255,.02);
+  margin-bottom:36px;
+}
+.hero .kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px var(--accent)}
+.hero h1{font-size:6.2em; line-height:.95; letter-spacing:-.045em; font-weight:800; max-width:15em}
+.hero h1 .accent{background:linear-gradient(90deg,var(--accent),var(--alt)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+.hero .lede{margin-top:32px; font-size:1.55em; color:var(--text-inv-2); max-width:26em; line-height:1.45; font-weight:400}
 
-/* Ticker / stat strip */
-.strip{display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--slate-3); border-bottom:1px solid var(--slate-3); margin-top:60px}
-section.dark .strip{border-color:rgba(255,255,255,.15)}
-.strip .cell{padding:28px 24px; border-right:1px solid rgba(0,0,0,.1)}
-.strip .cell:last-child{border-right:0}
-section.dark .strip .cell{border-right-color:rgba(255,255,255,.08)}
-.strip .cell .n{font-family:var(--serif); font-size:3.2em; font-weight:900; line-height:1; letter-spacing:-.03em}
-.strip .cell .n.gold{color:var(--gold)}
-.strip .cell .n.sky{color:var(--sky-l)}
-.strip .cell .l{font-family:var(--mono); font-size:.58em; letter-spacing:.24em; text-transform:uppercase; color:var(--slate-3); margin-top:12px; font-weight:600}
-.strip .cell .s{font-size:.75em; color:var(--slate-3); margin-top:6px; line-height:1.4}
+/* Mesh visual detail — solo en hero */
+.hero::before{
+  content:""; position:absolute; inset:0; opacity:.35; pointer-events:none;
+  background:
+    radial-gradient(circle at 75% 25%, rgba(0,212,255,.4), transparent 30%),
+    radial-gradient(circle at 25% 75%, rgba(167,139,250,.35), transparent 30%);
+  filter:blur(80px);
+}
+.hero > *{position:relative; z-index:1}
 
-/* Timeline horizontal ribbon */
-.ribbon{position:relative; margin:80px 0 40px; padding:0 40px}
-.ribbon .track{height:2px; background:var(--slate-3); position:relative}
-section.dark .ribbon .track{background:rgba(255,255,255,.25)}
-.ribbon .stop{position:absolute; top:-8px; text-align:center; transform:translateX(-50%)}
-.ribbon .stop .dot{width:18px; height:18px; border-radius:50%; background:var(--paper); border:2px solid var(--slate-4); margin:0 auto 20px}
-section.dark .ribbon .stop .dot{background:var(--ink); border-color:rgba(255,255,255,.6)}
-.ribbon .stop.gold .dot{border-color:var(--gold); background:var(--gold)}
-.ribbon .stop.warn .dot{border-color:var(--gold-l); background:var(--gold-l)}
-.ribbon .stop.bad .dot{border-color:#c94a4a; background:#c94a4a}
-.ribbon .stop .day{font-family:var(--serif); font-size:1.7em; font-weight:800; line-height:1}
-.ribbon .stop .lb{font-family:var(--mono); font-size:.58em; letter-spacing:.2em; text-transform:uppercase; color:var(--slate-3); margin-top:8px; font-weight:600; white-space:nowrap}
-.ribbon .below{position:absolute; top:110px; left:50%; transform:translateX(-50%); font-size:.75em; color:var(--slate-3); line-height:1.5; text-align:center; width:180px; font-family:var(--sans)}
+/* ============ NUMBER SPREAD ============ */
+.number-hero{display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; margin-top:20px}
+.number-hero .huge{
+  font-size:12em; font-weight:900; line-height:.9;
+  letter-spacing:-.055em; color:var(--text-primary);
+  background:linear-gradient(180deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.number-hero .huge-unit{
+  display:block; margin-top:20px; font-size:.16em;
+  color:var(--text-secondary); font-family:var(--font-mono); letter-spacing:.16em;
+  text-transform:uppercase; font-weight:500;
+}
+.number-hero .side p{font-size:1.4em; color:var(--text-secondary); line-height:1.5; font-weight:400; max-width:22em}
+.number-hero .side .kv{margin-top:36px; padding-top:24px; border-top:1px solid var(--border-light); display:grid; grid-template-columns:1fr 1fr; gap:20px}
+.number-hero .side .kv .k{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:6px}
+.number-hero .side .kv .v{font-size:1.6em; font-weight:700; letter-spacing:-.02em}
 
-/* Legal doc style */
-.legal-doc{background:var(--cream); border:1px solid var(--sand); padding:56px; position:relative; margin-top:20px}
-.legal-doc::before{content:""; position:absolute; top:0; left:0; right:0; height:6px; background:var(--gold)}
-.legal-doc .hdr{font-family:var(--mono); font-size:.65em; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; font-weight:700}
-.legal-doc h3{font-family:var(--serif); font-size:2em; margin-bottom:16px; color:var(--ink); font-weight:700; max-width:none}
-.legal-doc p{font-size:1.05em; color:var(--slate-4); line-height:1.6; max-width:38em}
-.legal-doc .clauses{display:grid; grid-template-columns:repeat(3,1fr); gap:32px; margin-top:36px; padding-top:32px; border-top:1px solid var(--sand)}
-.legal-doc .cl .k{font-family:var(--mono); font-size:.6em; letter-spacing:.2em; text-transform:uppercase; color:var(--slate-3); font-weight:600; margin-bottom:8px}
-.legal-doc .cl .v{font-family:var(--serif); font-size:1.35em; font-weight:700; line-height:1.15}
-.legal-doc .cl .d{font-size:.8em; color:var(--slate-3); margin-top:6px; line-height:1.5}
+/* ============ STAT GRID / KPIs ============ */
+.stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid var(--border-light); border-bottom:1px solid var(--border-light); margin-top:8px}
+.stat-cell{padding:32px 24px; border-right:1px solid var(--border-light)}
+.stat-cell:last-child{border-right:0}
+.stat-cell .l{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:14px; font-weight:500}
+.stat-cell .v{font-size:3.2em; font-weight:800; line-height:1; letter-spacing:-.035em}
+.stat-cell .v.accent{color:var(--accent)}
+.stat-cell .v.alt{color:var(--alt)}
+.stat-cell .s{font-size:13px; color:var(--text-secondary); margin-top:14px; line-height:1.4; font-weight:400}
 
-/* Fragment reveal effect */
-.reveal .fragment.fade-in-then-out{opacity:0; visibility:hidden}
-.reveal .fragment.fade-in-then-out.current-fragment{opacity:1; visibility:inherit}
+/* En dark theme */
+.dark .stat-grid{border-color:var(--border-strong)}
+.dark .stat-cell{border-color:var(--border-dark)}
+.dark .stat-cell .v{color:var(--text-inv)}
+.dark .stat-cell .s{color:var(--text-inv-2)}
+.dark .stat-cell .l{color:var(--text-inv-3)}
 
-/* Segment cards (clients) */
-.seg-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:20px}
-.seg-e{padding:44px; background:var(--paper); border:1px solid var(--sand); border-radius:2px; position:relative}
-.seg-e.bo{border-top:4px solid var(--sky)}
-.seg-e.lo{border-top:4px solid var(--wine)}
-.seg-e .h{font-family:var(--mono); font-size:.65em; letter-spacing:.24em; text-transform:uppercase; color:var(--slate-3); font-weight:600; margin-bottom:10px}
-.seg-e .tot{font-family:var(--serif); font-size:4em; font-weight:900; line-height:1; letter-spacing:-.03em; margin:0 0 6px}
-.seg-e .pct{font-family:var(--mono); font-size:.85em; color:var(--slate-3); margin-bottom:32px; font-weight:600}
-.seg-e .row-c{display:flex; justify-content:space-between; align-items:baseline; padding:16px 0; border-top:1px solid rgba(0,0,0,.08); font-family:var(--sans)}
-.seg-e .row-c:first-of-type{border-top:0}
-.seg-e .row-c .nm{font-size:1em; font-weight:600}
-.seg-e .row-c .vol{font-family:var(--mono); font-weight:600; color:var(--slate-4)}
+/* ============ TABLA EDITORIAL ============ */
+.tbl{width:100%; border-collapse:collapse; margin-top:32px}
+.tbl th{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--text-tertiary); text-align:left; padding:16px 16px 12px 0;
+  border-bottom:1px solid var(--border-light); font-weight:500;
+}
+.tbl td{padding:22px 16px 22px 0; border-bottom:1px solid var(--border-light); font-size:15px; vertical-align:top; color:var(--text-primary)}
+.tbl td .lbl{font-size:12px; color:var(--text-tertiary); margin-top:4px; font-weight:400}
+.tbl td.num{font-family:var(--font-mono); text-align:right; font-variant-numeric:tabular-nums; font-size:16px; font-weight:600; color:var(--accent); padding-right:0}
+.dark .tbl th, .dark .tbl td{border-color:var(--border-dark)}
+.dark .tbl td{color:var(--text-inv)}
+.dark .tbl td .lbl{color:var(--text-inv-3)}
+.dark .tbl th{color:var(--text-inv-3)}
 
-/* Superposition chart */
-.overlap{background:var(--cream); border:1px solid var(--sand); padding:32px; margin-top:20px}
-.overlap .lbl-row{display:grid; grid-template-columns:100px 1fr; font-family:var(--mono); font-size:.55em; letter-spacing:.2em; color:var(--slate-3); text-transform:uppercase; font-weight:600; padding-bottom:12px; border-bottom:1px solid var(--sand)}
-.overlap .lbl-row .days{display:grid; grid-template-columns:repeat(11,1fr); text-align:left}
-.overlap .cy{display:grid; grid-template-columns:100px 1fr; gap:20px; align-items:center; padding:14px 0}
-.overlap .cy .cn{font-family:var(--serif); font-size:1em; font-weight:700}
-.overlap .cy .bar{position:relative; height:26px; background:rgba(0,0,0,.04)}
-.overlap .cy .b{position:absolute; top:0; height:100%; display:flex; align-items:center; padding:0 8px; font-family:var(--mono); font-size:.55em; font-weight:700; text-transform:uppercase; letter-spacing:.15em}
-.overlap .cy .b.tr{background:var(--sky); color:#fff}
-.overlap .cy .b.win{background:var(--forest); color:#fff}
-.overlap .cy .b.ida{background:var(--gold); color:#fff; opacity:.7}
+/* ============ FLOW DIAGRAM ============ */
+.flow{display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:0; align-items:stretch; margin-top:44px}
+.flow .node{
+  padding:28px 24px; background:var(--card-light); border:1px solid var(--border-light);
+  border-radius:10px; display:flex; flex-direction:column; justify-content:space-between;
+}
+.flow .node .idx{font-family:var(--font-mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:16px}
+.flow .node .nm{font-size:1.6em; font-weight:700; letter-spacing:-.02em; margin-bottom:8px; line-height:1.05}
+.flow .node .d{font-size:13px; color:var(--text-secondary); line-height:1.5}
+.flow .arrow{display:flex; align-items:center; justify-content:center; padding:0 20px; color:var(--accent); font-size:24px; font-weight:300}
+.flow-split{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px}
+.flow-split .node{border-left:3px solid var(--accent)}
+.flow-split .node.alt{border-left-color:var(--alt)}
 
-/* KPI editorial cards */
-.kpi-e{display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid var(--slate-3); border-bottom:1px solid var(--slate-3)}
-section.dark .kpi-e{border-color:rgba(255,255,255,.15)}
-.kpi-e .k{padding:36px 24px; border-right:1px solid rgba(0,0,0,.08)}
-.kpi-e .k:last-child{border-right:0}
-section.dark .kpi-e .k{border-right-color:rgba(255,255,255,.08)}
-.kpi-e .k .l{font-family:var(--mono); font-size:.55em; letter-spacing:.24em; text-transform:uppercase; color:var(--slate-3); font-weight:600; margin-bottom:14px}
-.kpi-e .k .v{font-family:var(--serif); font-size:2.6em; font-weight:900; line-height:1; letter-spacing:-.03em}
-.kpi-e .k .t{font-size:.72em; color:var(--slate-3); line-height:1.5; margin-top:14px}
-.kpi-e .k .v.ok{color:var(--forest)} section.dark .kpi-e .k .v.ok{color:#4dc27a}
-.kpi-e .k .v.gold{color:var(--gold)}
-.kpi-e .k .v.sky{color:var(--sky)} section.dark .kpi-e .k .v.sky{color:var(--sky-l)}
-.kpi-e .k .v.wine{color:var(--wine)} section.dark .kpi-e .k .v.wine{color:#c76b7a}
-
-/* Risk section split */
-.risk-e{display:grid; grid-template-columns:1fr 1.4fr; gap:80px; align-items:center; margin-top:40px}
-.risk-e .badge{width:280px; height:280px; border-radius:50%; margin:0 auto; background:conic-gradient(var(--gold) 0deg 130deg,rgba(255,255,255,.08) 130deg 360deg); display:flex; align-items:center; justify-content:center; position:relative}
-.risk-e .badge::after{content:""; position:absolute; inset:20px; border-radius:50%; background:var(--ink)}
-.risk-e .badge .in{position:relative; z-index:1; text-align:center}
-.risk-e .badge .in .big{font-family:var(--serif); font-size:4em; font-weight:900; line-height:1; color:var(--gold-l)}
-.risk-e .badge .in .lbl{font-family:var(--mono); font-size:.55em; letter-spacing:.28em; color:rgba(255,255,255,.6); margin-top:8px; text-transform:uppercase; font-weight:600}
-.risk-list-e{list-style:none; padding:0}
-.risk-list-e li{padding:24px 0; border-top:1px solid rgba(255,255,255,.12); display:flex; gap:24px; align-items:flex-start; font-size:1em; line-height:1.55; color:rgba(255,255,255,.85)}
-.risk-list-e li:first-child{border-top:0}
-.risk-list-e li .n{font-family:var(--serif); font-size:2em; font-weight:900; color:var(--gold-l); line-height:1; flex-shrink:0; width:1.5em}
-
-/* Roadmap tri-column */
-.rm-e{display:grid; grid-template-columns:repeat(3,1fr); gap:32px; margin-top:20px}
-.rm-e .col{background:var(--cream); border:1px solid var(--sand); padding:36px 32px; position:relative}
-.rm-e .col::before{content:""; position:absolute; top:0; left:0; right:0; height:4px}
-.rm-e .col:nth-child(1)::before{background:var(--sky)}
-.rm-e .col:nth-child(2)::before{background:var(--forest)}
-.rm-e .col:nth-child(3)::before{background:var(--gold)}
-.rm-e .col .q{font-family:var(--mono); font-size:.6em; letter-spacing:.24em; text-transform:uppercase; color:var(--slate-3); font-weight:600; margin-bottom:8px}
-.rm-e .col h3{font-family:var(--serif); font-size:1.6em; font-weight:800; color:var(--ink); margin-bottom:20px; max-width:none}
-.rm-e .col ul{list-style:none; padding:0}
-.rm-e .col ul li{padding:12px 0; font-size:.85em; color:var(--slate-4); line-height:1.5; border-top:1px solid rgba(0,0,0,.08)}
-.rm-e .col ul li:first-child{border-top:0}
-.rm-e .col ul li::before{content:"◆ "; color:var(--gold); font-size:.7em; margin-right:6px; vertical-align:middle}
-
-/* Closing */
-.closing{text-align:center; padding:100px}
-.closing .stamp{font-family:var(--mono); font-size:.7em; letter-spacing:.4em; color:var(--gold-l); text-transform:uppercase; font-weight:600; margin-bottom:60px}
-.closing .final{font-family:var(--serif); font-size:5em; line-height:1.05; font-weight:900; letter-spacing:-.03em; max-width:15em; margin:0 auto}
-.closing .divider{width:60px; height:2px; background:var(--gold); margin:60px auto}
-.closing .sig{font-family:var(--mono); font-size:.65em; letter-spacing:.3em; color:rgba(255,255,255,.5); text-transform:uppercase; font-weight:600}
-
-/* Custom controls */
-.reveal .controls .navigate-left,
-.reveal .controls .navigate-right,
-.reveal .controls .navigate-up,
-.reveal .controls .navigate-down{color:var(--gold)}
-
-/* Progress bar customization */
-.reveal .progress{height:3px; background:rgba(0,0,0,.1)}
-section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
-
-/* Print / PDF friendly */
-@media print {
-  section{page-break-after:always}
-  .chrome-persistent{position:absolute}
+/* ============ QUOTE ============ */
+.quote-block{
+  font-size:3.2em; line-height:1.15; letter-spacing:-.035em; font-weight:600;
+  max-width:22em; color:var(--text-inv);
+}
+.quote-block em{font-weight:700; color:var(--accent)}
+.quote-block .cite{
+  display:block; margin-top:32px; font-family:var(--font-mono); font-size:.24em;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--text-inv-3); font-weight:500;
 }
 
-/* ============================================================
-   PERSISTENT CHROME · Dynker branding en cada slide
-   ============================================================ */
-.chrome-persistent{
+/* ============ CLIENT SEGMENTS ============ */
+.seg-grid{display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:20px}
+.seg-card{
+  padding:36px 32px; background:var(--card-light); border:1px solid var(--border-light);
+  border-radius:12px; position:relative; overflow:hidden;
+}
+.seg-card::before{content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent)}
+.seg-card.alt::before{background:var(--alt)}
+.seg-card .head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px}
+.seg-card .h-name{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--text-tertiary); font-weight:500}
+.seg-card .tot{font-size:4em; font-weight:800; letter-spacing:-.04em; line-height:1; margin:8px 0 4px}
+.seg-card .pct{font-family:var(--font-mono); font-size:12px; color:var(--text-secondary); margin-bottom:28px; font-weight:500; letter-spacing:.06em}
+.seg-card .rows .r{display:flex; justify-content:space-between; align-items:baseline; padding:14px 0; border-top:1px solid var(--border-light); font-size:15px}
+.seg-card .rows .r:first-child{border-top:0}
+.seg-card .rows .r .name{font-weight:500}
+.seg-card .rows .r .vol{font-family:var(--font-mono); color:var(--text-secondary); font-weight:500; font-variant-numeric:tabular-nums}
+
+/* ============ LEGAL DOC ============ */
+.doc{padding:44px; background:var(--card-light); border:1px solid var(--border-light); border-radius:12px; margin-top:12px; position:relative}
+.doc::before{content:""; position:absolute; top:0; left:0; width:6px; bottom:0; background:var(--accent); border-radius:12px 0 0 12px}
+.doc .doc-h{font-family:var(--font-mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:16px}
+.doc h3{font-size:1.8em; font-weight:700; letter-spacing:-.025em; color:var(--text-primary); margin-bottom:14px; max-width:none}
+.doc p{font-size:16px; color:var(--text-secondary); line-height:1.6; max-width:42em}
+.doc .refs{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:32px; padding-top:32px; border-top:1px solid var(--border-light)}
+.doc .refs .ref .k{font-family:var(--font-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:8px}
+.doc .refs .ref .v{font-size:16px; font-weight:700; letter-spacing:-.02em; margin-bottom:4px}
+.doc .refs .ref .d{font-size:12px; color:var(--text-secondary); line-height:1.5}
+
+/* ============ TIMELINE RIBBON ============ */
+.tl{position:relative; margin:60px 20px 40px}
+.tl .line{height:2px; background:linear-gradient(90deg,var(--ok) 0%,var(--ok) 50%,var(--warn) 50%,var(--warn) 60%,var(--bad) 60%,var(--bad) 85%,var(--border-light) 85%); position:relative}
+.tl .stop{position:absolute; top:-8px; transform:translateX(-50%); text-align:center}
+.tl .stop .dot{width:14px; height:14px; border-radius:50%; background:var(--card-light); border:2px solid var(--text-tertiary); margin:0 auto 20px}
+.tl .stop.ok .dot{border-color:var(--ok); background:var(--ok)}
+.tl .stop.warn .dot{border-color:var(--warn); background:var(--warn)}
+.tl .stop.bad .dot{border-color:var(--bad); background:var(--bad)}
+.tl .stop .day{font-size:1.6em; font-weight:800; letter-spacing:-.02em; line-height:1}
+.tl .stop .lb{font-family:var(--font-mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--text-tertiary); margin-top:8px; font-weight:500; white-space:nowrap}
+.tl .stop .bel{position:absolute; top:90px; left:50%; transform:translateX(-50%); font-size:12px; color:var(--text-secondary); line-height:1.45; text-align:center; width:170px; font-weight:400}
+
+/* ============ SUPERPOSICIÓN GANTT ============ */
+.gantt-e{padding:28px; background:var(--card-light); border:1px solid var(--border-light); border-radius:12px; margin-top:16px}
+.gantt-e .hdr{display:grid; grid-template-columns:90px 1fr; font-family:var(--font-mono); font-size:10px; letter-spacing:.14em; color:var(--text-tertiary); text-transform:uppercase; font-weight:500; padding-bottom:12px; border-bottom:1px solid var(--border-light)}
+.gantt-e .hdr .days{display:grid; grid-template-columns:repeat(11,1fr); text-align:left}
+.gantt-e .row{display:grid; grid-template-columns:90px 1fr; gap:20px; align-items:center; padding:16px 0}
+.gantt-e .row .cn{font-size:14px; font-weight:700; letter-spacing:-.01em}
+.gantt-e .row .bar{position:relative; height:24px; background:rgba(0,0,0,.02); border-radius:4px}
+.gantt-e .row .b{position:absolute; top:0; height:100%; display:flex; align-items:center; padding:0 8px; font-family:var(--font-mono); font-size:9.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; border-radius:3px; color:#fff}
+.gantt-e .row .b.tr{background:var(--accent); color:#0a0a0a}
+.gantt-e .row .b.win{background:var(--ok)}
+.gantt-e .row .b.ida{background:var(--warn); opacity:.75}
+
+/* ============ RISK / SPLIT ============ */
+.risk-split{display:grid; grid-template-columns:.9fr 1.3fr; gap:80px; align-items:center; margin-top:40px}
+.risk-badge{position:relative; width:260px; height:260px; margin:0 auto}
+.risk-badge svg{width:100%; height:100%; transform:rotate(-90deg)}
+.risk-badge .circ-bg{stroke:var(--border-strong); fill:none; stroke-width:2}
+.risk-badge .circ-fg{stroke:var(--accent); fill:none; stroke-width:3; stroke-dasharray:220; stroke-dashoffset:80; stroke-linecap:round}
+.risk-badge .center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
+.risk-badge .center .n{font-size:3.4em; font-weight:900; letter-spacing:-.04em; color:var(--accent); line-height:1}
+.risk-badge .center .l{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--text-inv-3); margin-top:6px; font-weight:500}
+.risk-list{list-style:none; padding:0}
+.risk-list li{padding:22px 0; border-top:1px solid var(--border-dark); display:flex; gap:20px; align-items:flex-start; color:var(--text-inv-2); font-size:15px; line-height:1.5}
+.risk-list li:first-child{border-top:0}
+.risk-list li .n{font-family:var(--font-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); font-weight:600; flex-shrink:0; padding-top:3px; width:2.5em}
+.risk-list li strong{color:var(--text-inv); font-weight:600}
+
+/* ============ KPI DENSE ============ */
+.kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border-light); border:1px solid var(--border-light); border-radius:12px; overflow:hidden; margin-top:8px}
+.kpi-cell{padding:28px 24px; background:var(--card-light)}
+.kpi-cell .l{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:12px; font-weight:500}
+.kpi-cell .v{font-size:2.6em; font-weight:800; line-height:1; letter-spacing:-.035em}
+.kpi-cell .v.ok{color:var(--ok)} .kpi-cell .v.accent{color:var(--accent)} .kpi-cell .v.alt{color:var(--alt)} .kpi-cell .v.warn{color:var(--warn)}
+.kpi-cell .t{font-size:12px; color:var(--text-secondary); margin-top:10px; line-height:1.45; font-weight:400}
+
+/* ============ ROADMAP ============ */
+.rm-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:12px}
+.rm-col{padding:32px 28px; background:var(--card-light); border:1px solid var(--border-light); border-radius:12px; position:relative}
+.rm-col::before{content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent)}
+.rm-col:nth-child(2)::before{background:var(--alt)}
+.rm-col:nth-child(3)::before{background:var(--warn)}
+.rm-col .q{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:8px; font-weight:500}
+.rm-col h3{font-size:1.4em; font-weight:700; letter-spacing:-.025em; color:var(--text-primary); margin-bottom:20px; max-width:none}
+.rm-col ul{list-style:none; padding:0}
+.rm-col ul li{padding:12px 0; font-size:14px; color:var(--text-secondary); line-height:1.5; border-top:1px solid var(--border-light); display:flex; gap:12px}
+.rm-col ul li:first-child{border-top:0}
+.rm-col ul li::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:8px}
+
+/* ============ CLOSING ============ */
+.closing{padding:100px; text-align:center}
+.closing .stamp{font-family:var(--font-mono); font-size:11px; letter-spacing:.24em; color:var(--accent); text-transform:uppercase; font-weight:600; margin-bottom:56px}
+.closing .final{
+  font-size:5.4em; font-weight:800; letter-spacing:-.04em; line-height:1;
+  max-width:14em; margin:0 auto; color:var(--text-inv);
+}
+.closing .final em{background:linear-gradient(90deg,var(--accent),var(--alt)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-style:normal; font-weight:800}
+.closing .divider{width:44px; height:2px; background:var(--accent); margin:56px auto}
+.closing .sig{font-family:var(--font-mono); font-size:11px; letter-spacing:.24em; color:var(--text-inv-3); text-transform:uppercase; font-weight:500}
+
+/* ============ COLOFON ============ */
+.colofon-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; margin-top:56px; padding-top:44px; border-top:1px solid var(--border-dark)}
+.colofon-col .k{font-family:var(--font-mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:16px}
+.colofon-col h4{font-size:2.2em; font-weight:800; letter-spacing:-.035em; color:var(--text-inv); line-height:1.1; margin-bottom:16px}
+.colofon-col h4 .accent-txt{color:var(--accent)}
+.colofon-col p{color:var(--text-inv-2); font-size:15px; line-height:1.55; max-width:24em}
+.colofon-partners{list-style:none; padding:0; margin-top:16px}
+.colofon-partners li{font-size:22px; font-weight:600; color:var(--text-inv); padding:6px 0; letter-spacing:-.015em}
+.colofon-partners li::before{content:"—"; color:var(--accent); margin-right:12px; font-weight:400}
+
+/* ============ CHROME PERSISTENTE ============ */
+.chrome-p{
   position:fixed; left:0; right:0; bottom:0;
-  padding:14px 44px 18px;
-  display:grid; grid-template-columns:auto 1fr auto; gap:44px;
-  align-items:center;
+  padding:12px 40px 14px;
+  display:grid; grid-template-columns:auto 1fr auto; gap:40px; align-items:center;
   z-index:200; pointer-events:none;
-  background:linear-gradient(to top, rgba(8,12,20,.92) 0%, rgba(8,12,20,.55) 60%, transparent 100%);
-  color:rgba(255,255,255,.62);
-  border-top:1px solid rgba(255,255,255,.06);
-  transition:background .35s ease, color .35s ease, border-color .35s ease;
+  background:linear-gradient(to top, rgba(10,10,10,.9), rgba(10,10,10,.5) 60%, transparent);
+  color:var(--text-inv-2);
+  border-top:1px solid var(--border-dark);
+  transition:background .35s, color .35s, border-color .35s;
 }
-.chrome-persistent.light{
-  background:linear-gradient(to top, rgba(245,241,232,.95) 0%, rgba(245,241,232,.55) 60%, transparent 100%);
-  color:rgba(10,14,20,.5);
-  border-top-color:rgba(0,0,0,.06);
+.chrome-p.light{
+  background:linear-gradient(to top, rgba(249,249,247,.94), rgba(249,249,247,.5) 60%, transparent);
+  color:var(--text-secondary);
+  border-top-color:var(--border-light);
 }
-.chrome-mono{
-  font-family:var(--mono); font-size:9.5px; letter-spacing:.24em;
-  text-transform:uppercase; font-weight:600; line-height:1;
+.chrome-p .brand{display:flex; align-items:center; gap:14px}
+.chrome-p .mark{
+  font-size:14px; font-weight:900; letter-spacing:.32em; color:var(--accent);
+  padding-right:14px; border-right:1px solid var(--border-strong);
 }
-.chrome-brand{display:flex; align-items:center; gap:14px}
-.chrome-mark{
-  font-family:var(--serif); font-size:16px; font-weight:900;
-  letter-spacing:.36em; color:var(--gold);
-  line-height:1; padding-right:14px;
-  border-right:1px solid currentColor;
-  border-right-color:rgba(255,255,255,.18);
+.chrome-p.light .mark{border-right-color:var(--border-light)}
+.chrome-p .tag, .chrome-p .agr, .chrome-p .proj{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; font-weight:500; color:inherit;
 }
-.chrome-persistent.light .chrome-mark{border-right-color:rgba(0,0,0,.15)}
-.chrome-tag{color:inherit; opacity:.85; letter-spacing:.2em; font-size:9px}
-.chrome-agreement{text-align:center; color:inherit; letter-spacing:.22em}
-.chrome-agreement b{color:var(--gold); letter-spacing:.28em; font-weight:700}
-.chrome-project{text-align:right; color:inherit; letter-spacing:.22em}
-.chrome-project .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--gold); margin-right:8px; vertical-align:middle}
+.chrome-p .agr{text-align:center}
+.chrome-p .agr b{color:var(--accent); letter-spacing:.22em; font-weight:700}
+.chrome-p .proj{text-align:right}
+.chrome-p .proj .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); margin-right:8px; vertical-align:middle}
 
-/* Ocultar controles nativos reveal (redundantes con chrome) */
+/* Ocultar controles + progress al top */
 .reveal .controls{display:none !important}
-/* Mover progress bar arriba */
-.reveal .progress{top:0 !important; bottom:auto !important; height:3px !important}
+.reveal .progress{top:0 !important; bottom:auto !important; height:2px !important; color:var(--accent) !important}
+
+/* Slide-specific responsive */
+@media (max-width:1200px){
+  .reveal h1{font-size:3.6em} .reveal h2{font-size:2.4em}
+  .number-hero, .risk-split, .colofon-grid{grid-template-columns:1fr; gap:32px}
+  .stat-grid, .kpi-grid, .seg-grid, .rm-grid{grid-template-columns:1fr 1fr}
+  .flow{grid-template-columns:1fr; gap:12px}
+  .flow .arrow{display:none}
+}
 </style>
 </head>
 <body>
+
 <div class="reveal">
   <div class="slides">
 
     <!-- 1 · PORTADA ================================================= -->
-    <section class="deep" data-transition="fade">
-      <div class="hero-wrap">
-        <div class="top">
+    <section class="dark">
+      <div class="hero">
+        <div class="top-bar">
           <div>Proyecto J&F · Documento operativo</div>
-          <div>Un documento de <span style="color:var(--gold-l);letter-spacing:.32em;font-weight:800">DYNKER</span> · Julio 2026</div>
+          <div>Un documento de <b>DYNKER</b> · Vol. 01 · Jul 2026</div>
         </div>
-        <!-- Textura de mapa (SVG simple) -->
-        <svg class="maptexture" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
-          <g stroke="#d4a862" stroke-width="1" fill="none">
-            <path d="M100 400 Q 300 200 500 350 T 800 500"/>
-            <path d="M150 500 Q 350 350 550 500 T 850 600"/>
-            <path d="M200 250 Q 400 100 600 250 T 850 400"/>
-          </g>
-          <g fill="#d4a862">
-            <circle cx="250" cy="380" r="6"/><text x="270" y="384" fill="#d4a862" font-family="monospace" font-size="14">ARGENTINA</text>
-            <circle cx="500" cy="330" r="6"/><text x="520" y="334" fill="#d4a862" font-family="monospace" font-size="14">PARAGUAY</text>
-            <circle cx="700" cy="280" r="6"/><text x="720" y="284" fill="#d4a862" font-family="monospace" font-size="14">BOLIVIA</text>
-          </g>
-        </svg>
-        <div class="eyebrow" style="margin-left:90px">Dirección Ejecutiva · Confidencial</div>
-        <h1>Suministro<br>estratégico<br>de <em style="color:var(--gold-l);font-weight:900">gas oil</em>.</h1>
-        <div class="lede">Un programa continuo de doce ciclos mensuales que integra la reexportación a Bolivia y la venta local en Paraguay bajo un mismo flujo logístico.</div>
-        <div class="bottom">
-          <div>Dynker E&amp;C Group · Adecomi · Pessasa</div>
+        <div class="content">
+          <div class="kicker"><span class="dot"></span> Dirección Ejecutiva · Confidencial</div>
+          <h1>Suministro estratégico<br>de <span class="accent">gas oil</span>.</h1>
+          <div class="lede">Un programa continuo de doce ciclos mensuales que integra la reexportación a Bolivia y la venta local en Paraguay bajo un mismo flujo logístico.</div>
+        </div>
+        <div class="btm-bar">
+          <div>Diseñado y desarrollado por <b>DYNKER</b> · Adecomi · Pessasa</div>
           <div>660.000 m³ / año</div>
         </div>
       </div>
     </section>
 
-    <!-- 2 · TESIS EN NÚMERO GRANDE ================================================= -->
-    <section class="paper">
+    <!-- 2 · TESIS EN NÚMERO ================================================= -->
+    <section class="light">
       <div class="eyebrow">La tesis</div>
-      <div class="number-spread">
+      <div class="number-hero">
         <div>
-          <div class="huge">55K<span class="unit">m³ movilizados<br>cada mes</span></div>
+          <div class="huge">55K<span class="huge-unit">m³ movilizados por mes</span></div>
         </div>
-        <div>
-          <h2>Un programa consolidado bajo control único.</h2>
-          <p style="font-family:var(--serif); font-size:1.35em; font-weight:400; line-height:1.5; color:var(--slate-4); margin-top:24px">Doce ciclos mensuales encadenados. Un solo origen en Argentina. Dos destinos comerciales. Cuatro terminales dedicadas. Tres barcazas propias. Un régimen aduanero optimizado.</p>
-          <p style="font-size:.9em; color:var(--slate-3); margin-top:24px; max-width:26em">La escala del programa —660.000 m³ anuales— convierte lo que era un trámite en un activo estratégico de continuidad de suministro para dos mercados.</p>
+        <div class="side">
+          <h2 style="font-size:2.4em; margin-bottom:20px">Un programa consolidado bajo control único.</h2>
+          <p>Doce ciclos mensuales encadenados. Un origen en Argentina, dos destinos comerciales, cuatro terminales dedicadas, tres barcazas propias y un régimen aduanero optimizado.</p>
+          <div class="kv">
+            <div><div class="k">Volumen anual</div><div class="v">660K m³</div></div>
+            <div><div class="k">Ciclos por año</div><div class="v">12</div></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 3 · EXECUTIVE SUMMARY / 4 PILARES ================================================= -->
-    <section class="cream">
+    <!-- 3 · EXECUTIVE SUMMARY ================================================= -->
+    <section class="light">
       <div class="eyebrow">Resumen ejecutivo</div>
-      <h2 style="max-width:16em">Cuatro pilares que <em>sostienen</em> el programa.</h2>
-      <table class="editorial-table">
+      <h2>Cuatro pilares del programa.</h2>
+      <table class="tbl">
         <thead>
           <tr><th style="width:5%">#</th><th style="width:22%">Pilar</th><th style="width:53%">Descripción</th><th style="width:20%; text-align:right">Métrica</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td class="num">01</td>
+            <td class="num" style="color:var(--text-tertiary); font-size:14px">01</td>
             <td><strong>Escala consolidada</strong><div class="lbl">Volumen anualizado</div></td>
             <td>Un programa continuo de 12 ciclos mensuales que consolida en una sola cadena logística la reexportación a Bolivia y la venta local en Paraguay.</td>
             <td class="num">660K m³</td>
           </tr>
           <tr>
-            <td class="num">02</td>
+            <td class="num" style="color:var(--text-tertiary); font-size:14px">02</td>
             <td><strong>Doble mercado</strong><div class="lbl">Diversificación comercial</div></td>
             <td>40.000 m³/mes hacia Bolivia (YPFB, minería, transporte de urea desde Brasil) y 15.000 m³/mes al mercado paraguayo vía distribuidoras habilitadas.</td>
             <td class="num">73% / 27%</td>
           </tr>
           <tr>
-            <td class="num">03</td>
+            <td class="num" style="color:var(--text-tertiary); font-size:14px">03</td>
             <td><strong>Marco IDA optimizado</strong><div class="lbl">Ventaja aduanera</div></td>
             <td>Régimen de Depósito Aduanero con tributos suspendidos por hasta 60 días, gestionado con meta interna disciplinada de 27 días.</td>
             <td class="num">27 d</td>
           </tr>
           <tr>
-            <td class="num">04</td>
+            <td class="num" style="color:var(--text-tertiary); font-size:14px">04</td>
             <td><strong>Redundancia estratégica</strong><div class="lbl">Colchón compartido</div></td>
             <td>Reserva en Petropar para absorber desvíos de navegabilidad, retiros lentos o picos de demanda sin interrumpir el suministro.</td>
             <td class="num">30K m³</td>
@@ -402,303 +458,279 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
       </table>
     </section>
 
-    <!-- 4 · QUOTE EDITORIAL ================================================= -->
-    <section class="deep">
+    <!-- 4 · SECTION DIVIDER / QUOTE ================================================= -->
+    <section class="dark">
       <div class="eyebrow">La disciplina que sostiene el modelo</div>
-      <div class="pull" style="color:var(--slate-1)">
-        Un programa de suministro no se mide por el volumen que promete<br>sino por la disciplina con la que <em>ejecuta cada uno</em> de sus ciclos.
+      <div class="quote-block">
+        Un programa de suministro no se mide por el volumen que promete<br>
+        sino por la <em>disciplina</em> con la que ejecuta cada uno de sus ciclos.
         <span class="cite">— Principio operativo del proyecto</span>
       </div>
     </section>
 
     <!-- 5 · MODELO OPERATIVO ================================================= -->
-    <section class="paper">
+    <section class="light">
       <div class="eyebrow">Modelo operativo</div>
-      <h2 style="max-width:18em">Del origen al destino,<br>un solo flujo <em>integrado</em>.</h2>
-      <div class="flow-e">
-        <div class="box">
-          <div class="num">01 · Origen</div>
+      <h2>Del origen al destino, un solo flujo integrado.</h2>
+      <div class="flow">
+        <div class="node">
+          <div class="idx">01 · Origen</div>
           <div class="nm">Argentina</div>
           <div class="d">Carga mensual única en puerto argentino. Cadencia rigurosa de 30 días entre operaciones.</div>
         </div>
-        <div class="arr">→</div>
-        <div class="box">
-          <div class="num">02 · Tránsito</div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="idx">02 · Tránsito</div>
           <div class="nm">Hidrovía</div>
           <div class="d">Navegación fluvial con tres barcazas. 70.000 m³ de capacidad para 55.000 m³ requeridos.</div>
         </div>
-        <div class="arr">→</div>
-        <div class="box" style="grid-column:span 1;border-color:var(--sky)">
-          <div class="num" style="color:var(--sky)">03 · Descarga</div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="idx">03 · Descarga</div>
           <div class="nm">Paraguay</div>
           <div class="d">Ingreso a Petrosan, Fuel Par e Integral bajo régimen aduanero correspondiente.</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-        <div class="box" style="background:var(--slate-1);border:1px solid var(--sky);padding:24px 22px;border-top:4px solid var(--sky)">
-          <div class="num" style="color:var(--sky);font-family:var(--mono);font-size:.55em;letter-spacing:.24em;font-weight:600;text-transform:uppercase">04a · Reexportación IDA</div>
-          <div style="font-family:var(--serif);font-size:1.5em;font-weight:700;margin-top:14px">Bolivia · 40.000 m³/mes</div>
-          <div style="font-size:.85em;color:var(--slate-3);margin-top:8px">Retiro por camión cisterna. Códigos IDA3 (ingreso) / EC09 (salida).</div>
+      <div class="flow-split">
+        <div class="node">
+          <div class="idx">04a · Reexportación IDA</div>
+          <div class="nm">Bolivia · 40.000 m³/mes</div>
+          <div class="d">Retiro por camión cisterna. Códigos aduaneros IDA3 (ingreso) y EC09 (salida).</div>
         </div>
-        <div class="box" style="background:var(--slate-1);border:1px solid var(--wine);padding:24px 22px;border-top:4px solid var(--wine)">
-          <div class="num" style="color:var(--wine);font-family:var(--mono);font-size:.55em;letter-spacing:.24em;font-weight:600;text-transform:uppercase">04b · Mercado interno</div>
-          <div style="font-family:var(--serif);font-size:1.5em;font-weight:700;margin-top:14px">Paraguay · 15.000 m³/mes</div>
-          <div style="font-size:.85em;color:var(--slate-3);margin-top:8px">Nacionalización vía Integral. Distribución con IVA + ISC.</div>
+        <div class="node alt">
+          <div class="idx" style="color:var(--alt)">04b · Mercado interno</div>
+          <div class="nm">Paraguay · 15.000 m³/mes</div>
+          <div class="d">Nacionalización vía Integral. Distribución con IVA + ISC según régimen local.</div>
         </div>
       </div>
     </section>
 
-    <!-- 6 · STRIP DE CIFRAS ================================================= -->
+    <!-- 6 · CIFRAS · DARK STRIP ================================================= -->
     <section class="dark">
-      <div class="eyebrow">La operación en cifras</div>
-      <h2 style="color:var(--slate-1); max-width:20em">La <em>magnitud</em> del programa mensual.</h2>
-      <div class="strip">
-        <div class="cell">
-          <div class="n gold">55K</div>
-          <div class="l">Volumen mensual m³</div>
-          <div class="s">Movilizados en un solo ciclo</div>
-        </div>
-        <div class="cell">
-          <div class="n gold">12</div>
-          <div class="l">Ciclos anuales</div>
-          <div class="s">Sin excepciones ni interrupciones</div>
-        </div>
-        <div class="cell">
-          <div class="n sky">3</div>
-          <div class="l">Flota fluvial</div>
-          <div class="s">70.000 m³ de capacidad instalada</div>
-        </div>
-        <div class="cell">
-          <div class="n sky">4</div>
-          <div class="l">Terminales</div>
-          <div class="s">3 dedicadas + 1 contingencia</div>
-        </div>
+      <div class="eyebrow">La operación en números</div>
+      <h2 style="max-width:18em">La magnitud del programa mensual.</h2>
+      <div class="stat-grid" style="margin-top:40px">
+        <div class="stat-cell"><div class="l">Volumen mensual</div><div class="v accent">55K</div><div class="s">m³ movilizados en un solo ciclo</div></div>
+        <div class="stat-cell"><div class="l">Ciclos anuales</div><div class="v accent">12</div><div class="s">Sin excepciones ni interrupciones</div></div>
+        <div class="stat-cell"><div class="l">Flota fluvial</div><div class="v alt">3</div><div class="s">Barcazas · 70.000 m³ capacidad</div></div>
+        <div class="stat-cell"><div class="l">Terminales</div><div class="v alt">4</div><div class="s">3 dedicadas + 1 contingencia</div></div>
       </div>
-      <div class="strip">
-        <div class="cell">
-          <div class="n" style="color:var(--slate-1)">1</div>
-          <div class="l">Puerto de carga</div>
-          <div class="s">Origen único en Argentina</div>
-        </div>
-        <div class="cell">
-          <div class="n" style="color:var(--slate-1)">2</div>
-          <div class="l">Regímenes aduaneros</div>
-          <div class="s">IDA (Bolivia) + General (local)</div>
-        </div>
-        <div class="cell">
-          <div class="n" style="color:var(--slate-1)">5</div>
-          <div class="l">Segmentos de cliente</div>
-          <div class="s">Diversificación equilibrada</div>
-        </div>
-        <div class="cell">
-          <div class="n" style="color:var(--slate-1)">15K</div>
-          <div class="l">Holgura de flota m³</div>
-          <div class="s">Capacidad excedente sobre plan</div>
-        </div>
+      <div class="stat-grid">
+        <div class="stat-cell"><div class="l">Puerto de carga</div><div class="v">1</div><div class="s">Origen único en Argentina</div></div>
+        <div class="stat-cell"><div class="l">Regímenes aduaneros</div><div class="v">2</div><div class="s">IDA (Bolivia) + General (local)</div></div>
+        <div class="stat-cell"><div class="l">Segmentos cliente</div><div class="v">5</div><div class="s">Diversificación equilibrada</div></div>
+        <div class="stat-cell"><div class="l">Holgura flota</div><div class="v">15K</div><div class="s">m³ excedentes sobre plan</div></div>
       </div>
     </section>
 
-    <!-- 7 · SEGMENTACIÓN DE DEMANDA ================================================= -->
-    <section class="cream">
+    <!-- 7 · SEGMENTOS ================================================= -->
+    <section class="light">
       <div class="eyebrow">Segmentación de la demanda</div>
-      <h2 style="max-width:16em">A quién le vendemos<br>cada uno de los <em>ciclos</em>.</h2>
+      <h2>A quién le vendemos cada ciclo.</h2>
       <div class="seg-grid">
-        <div class="seg-e bo">
-          <div class="h">Bolivia · Reexportación bajo IDA</div>
+        <div class="seg-card">
+          <div class="head">
+            <div class="h-name">Bolivia · Reexportación IDA</div>
+            <span class="pill accent">72,7%</span>
+          </div>
           <div class="tot">40.000</div>
-          <div class="pct">m³/mes · 72,7% del volumen total</div>
-          <div class="row-c"><span class="nm">YPFB</span><span class="vol">10.000 m³</span></div>
-          <div class="row-c"><span class="nm">Sector minero del Chaco</span><span class="vol">20.000 m³</span></div>
-          <div class="row-c"><span class="nm">Transporte de urea desde Brasil</span><span class="vol">10.000 m³</span></div>
+          <div class="pct">m³/mes · reexportados vía Petrosan &amp; Fuel Par</div>
+          <div class="rows">
+            <div class="r"><span class="name">YPFB</span><span class="vol">10.000 m³</span></div>
+            <div class="r"><span class="name">Sector minero del Chaco</span><span class="vol">20.000 m³</span></div>
+            <div class="r"><span class="name">Transporte de urea desde Brasil</span><span class="vol">10.000 m³</span></div>
+          </div>
         </div>
-        <div class="seg-e lo">
-          <div class="h">Paraguay · Venta local</div>
+        <div class="seg-card alt">
+          <div class="head">
+            <div class="h-name">Paraguay · Venta local</div>
+            <span class="pill" style="background:var(--alt-dim); color:var(--alt); border-color:transparent">27,3%</span>
+          </div>
           <div class="tot">15.000</div>
-          <div class="pct">m³/mes · 27,3% del volumen total</div>
-          <div class="row-c"><span class="nm">Petrosur</span><span class="vol">10.000 m³</span></div>
-          <div class="row-c"><span class="nm">Otras distribuidoras habilitadas</span><span class="vol">5.000 m³</span></div>
+          <div class="pct">m³/mes · nacionalizados vía Integral</div>
+          <div class="rows">
+            <div class="r"><span class="name">Petrosur</span><span class="vol">10.000 m³</span></div>
+            <div class="r"><span class="name">Otras distribuidoras habilitadas</span><span class="vol">5.000 m³</span></div>
+          </div>
         </div>
       </div>
-      <p style="max-width:44em;margin-top:36px;font-family:var(--serif);font-size:1.2em;color:var(--slate-4);line-height:1.5">La <em>diversificación por cliente y por régimen</em> protege el flujo de caja: la venta local ingresa recursos en el mismo mes mientras la reexportación completa su ciclo aduanero.</p>
     </section>
 
     <!-- 8 · MARCO LEGAL ================================================= -->
-    <section class="paper">
+    <section class="light">
       <div class="eyebrow">Marco legal · Ventaja competitiva</div>
-      <h2 style="max-width:15em">El régimen IDA convierte <em>el tiempo</em> en herramienta.</h2>
-      <div class="legal-doc">
-        <div class="hdr">Régimen de Depósito Aduanero · Ley 2.421/2004</div>
+      <h2>El régimen IDA convierte el tiempo en herramienta.</h2>
+      <div class="doc">
+        <div class="doc-h">Régimen de Depósito Aduanero · Ley 2.421/2004</div>
         <h3>Suspensión tributaria durante el depósito y hasta la reexportación</h3>
-        <p>El gas oil ingresa a Petrosan y Fuel Par con código IDA3 y sale hacia Bolivia con código EC09 (reexportación). Durante el período de depósito no se pagan tributos aduaneros; se liquidan únicamente si el producto se nacionaliza.</p>
-        <div class="clauses">
-          <div class="cl">
-            <div class="k">Norma de rango legal</div>
-            <div class="v">Ley 2.421/2004</div>
-            <div class="d">Artículo 163 · Régimen de depósito aduanero suspensivo</div>
-          </div>
-          <div class="cl">
-            <div class="k">Reglamentación</div>
-            <div class="v">Decreto 1.394/2014</div>
-            <div class="d">Plazo 30 + 30 días prorrogables · Techo legal 60 días</div>
-          </div>
-          <div class="cl">
-            <div class="k">Régimen local Paraguay</div>
-            <div class="v">IVA + ISC</div>
-            <div class="d">Ley 125/1991 (IVA) · Ley 6.380/2019 (ISC · combustibles hasta 50%)</div>
-          </div>
+        <p>El gas oil ingresa a Petrosan y Fuel Par con código IDA3 y sale hacia Bolivia con código EC09. Durante el período de depósito no se pagan tributos aduaneros; se liquidan únicamente si el producto se nacionaliza.</p>
+        <div class="refs">
+          <div class="ref"><div class="k">Norma de rango legal</div><div class="v">Ley 2.421/2004</div><div class="d">Artículo 163 · Régimen de depósito aduanero suspensivo</div></div>
+          <div class="ref"><div class="k">Reglamentación</div><div class="v">Decreto 1.394/2014</div><div class="d">Plazo 30 + 30 días prorrogables · Techo legal 60 días</div></div>
+          <div class="ref"><div class="k">Régimen local Paraguay</div><div class="v">IVA + ISC</div><div class="d">Ley 125/1991 (IVA) · Ley 6.380/2019 (ISC hasta 50%)</div></div>
         </div>
       </div>
-      <p style="margin-top:24px;font-family:var(--serif);font-size:1.15em;color:var(--slate-4);max-width:44em">Meta interna de gestión: <strong>27 días</strong> para el retiro completo. Deja <strong>33 días de margen</strong> frente al techo legal.</p>
+      <p style="margin-top:24px; font-size:17px; color:var(--text-secondary); max-width:42em">Meta interna de gestión: <strong style="color:var(--text-primary)">27 días</strong> para el retiro completo. Deja <strong style="color:var(--text-primary)">33 días de margen</strong> frente al techo legal.</p>
     </section>
 
-    <!-- 9 · ACTIVOS ESTRATÉGICOS ================================================= -->
-    <section class="deep">
+    <!-- 9 · ACTIVOS ================================================= -->
+    <section class="dark">
       <div class="eyebrow">Activos estratégicos</div>
-      <h2 style="color:var(--slate-1); max-width:16em">Flota fluvial<br>y red de <em>terminales</em>.</h2>
-      <div class="split-editorial">
-        <table class="editorial-table">
-          <thead>
-            <tr><th>Naviera</th><th style="text-align:right">Capacidad</th><th style="text-align:right">% total</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Mercurio</strong><div class="lbl">Barcaza principal</div></td><td class="num">30.000</td><td class="num">42,9%</td></tr>
-            <tr><td><strong>Navios</strong><div class="lbl">Barcaza secundaria</div></td><td class="num">20.000</td><td class="num">28,6%</td></tr>
-            <tr><td><strong>Rock Tree</strong><div class="lbl">Barcaza secundaria</div></td><td class="num">20.000</td><td class="num">28,6%</td></tr>
-            <tr style="border-top:2px solid rgba(255,255,255,.3)"><td><strong style="color:var(--gold-l)">TOTAL FLOTA</strong></td><td class="num" style="color:var(--gold-l);font-size:1.3em">70.000</td><td class="num" style="color:var(--gold-l)">100%</td></tr>
-          </tbody>
-        </table>
+      <h2>Flota fluvial y red de terminales.</h2>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:60px; margin-top:32px">
         <div>
-          <div class="side-text dark">Holgura de <em style="color:var(--gold-l)">15.000 m³</em> sobre el volumen mensual planificado.</div>
-          <p class="side-note" style="color:rgba(255,255,255,.6);margin-top:20px">Permite absorber demoras de carga o utilizar más de una naviera en un mismo ciclo. Convierte una restricción operativa en un colchón de continuidad.</p>
+          <div class="mono-label" style="margin-bottom:20px">FLOTA FLUVIAL · 70.000 M³ TOTAL</div>
+          <table class="tbl">
+            <thead><tr><th>Naviera</th><th style="text-align:right">Capacidad</th><th style="text-align:right">%</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Mercurio</strong><div class="lbl">Barcaza principal</div></td><td class="num">30K m³</td><td class="num">43%</td></tr>
+              <tr><td><strong>Navios</strong><div class="lbl">Secundaria</div></td><td class="num">20K m³</td><td class="num">29%</td></tr>
+              <tr><td><strong>Rock Tree</strong><div class="lbl">Secundaria</div></td><td class="num">20K m³</td><td class="num">28%</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:20px; color:var(--text-inv-2); font-size:14px">Holgura de <span style="color:var(--accent); font-weight:600">15.000 m³</span> sobre el volumen mensual planificado.</p>
+        </div>
+        <div>
+          <div class="mono-label" style="margin-bottom:20px">TERMINALES · 85.000 M³ TOTAL</div>
+          <table class="tbl">
+            <thead><tr><th>Terminal</th><th>Rol</th><th style="text-align:right">Cap.</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Petrosan</strong></td><td>Bolivia · IDA</td><td class="num">20K</td></tr>
+              <tr><td><strong>Fuel Par</strong></td><td>Bolivia · IDA</td><td class="num">20K</td></tr>
+              <tr><td><strong>Integral</strong></td><td>Paraguay · local</td><td class="num">15K</td></tr>
+              <tr><td><strong style="color:var(--accent)">Petropar</strong></td><td>Contingencia</td><td class="num">30K</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:20px; color:var(--text-inv-2); font-size:14px">Las 3 dedicadas operan sin colchón propio. Petropar cubre cualquier desvío.</p>
         </div>
       </div>
-      <table class="editorial-table" style="margin-top:60px">
-        <thead>
-          <tr><th>Terminal</th><th>Rol</th><th style="text-align:right">Capacidad</th><th style="text-align:right">Colchón propio</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Petrosan</strong></td><td>Bolivia · reexportación IDA</td><td class="num">20.000 m³</td><td class="num" style="color:rgba(255,255,255,.4)">0</td></tr>
-          <tr><td><strong>Fuel Par</strong></td><td>Bolivia · reexportación IDA</td><td class="num">20.000 m³</td><td class="num" style="color:rgba(255,255,255,.4)">0</td></tr>
-          <tr><td><strong>Integral</strong></td><td>Paraguay · venta local</td><td class="num">15.000 m³</td><td class="num" style="color:rgba(255,255,255,.4)">0</td></tr>
-          <tr><td><strong style="color:var(--gold-l)">Petropar</strong></td><td>Contingencia compartida</td><td class="num" style="color:var(--gold-l)">30.000 m³</td><td class="num" style="color:var(--gold-l)">Reserva total</td></tr>
-        </tbody>
-      </table>
     </section>
 
     <!-- 10 · TIMELINE ================================================= -->
-    <section class="paper">
+    <section class="light">
       <div class="eyebrow">Ritmo operativo</div>
-      <h2 style="max-width:18em">Los <em>cinco hitos</em> que gobiernan cada ciclo.</h2>
-      <div class="ribbon">
-        <div class="track">
-          <div class="stop gold" style="left:0%"><div class="dot"></div><div class="day">Día 0</div><div class="lb">Carga AR</div><div class="below">Zarpe desde puerto argentino</div></div>
-          <div class="stop gold" style="left:22%"><div class="dot"></div><div class="day">Día 13</div><div class="lb">Llegada PY</div><div class="below">Descarga en las tres terminales</div></div>
-          <div class="stop warn" style="left:55%"><div class="dot"></div><div class="day">Día 40</div><div class="lb">Meta interna</div><div class="below">Retiro completo objetivo · +27 d</div></div>
-          <div class="stop bad" style="left:63%"><div class="dot"></div><div class="day">Día 43</div><div class="lb">Ventana operativa</div><div class="below">Llega el próximo ciclo · límite físico</div></div>
-          <div class="stop" style="left:100%"><div class="dot"></div><div class="day">Día 73</div><div class="lb">Techo IDA</div><div class="below">Límite legal · no ritmo objetivo</div></div>
+      <h2>Los cinco hitos que gobiernan cada ciclo.</h2>
+      <div class="tl">
+        <div class="line">
+          <div class="stop ok" style="left:0%"><div class="dot"></div><div class="day">Día 0</div><div class="lb">Carga AR</div><div class="bel">Zarpe desde puerto argentino</div></div>
+          <div class="stop ok" style="left:22%"><div class="dot"></div><div class="day">Día 13</div><div class="lb">Llegada PY</div><div class="bel">Descarga en las tres terminales</div></div>
+          <div class="stop warn" style="left:55%"><div class="dot"></div><div class="day">Día 40</div><div class="lb">Meta interna</div><div class="bel">Retiro completo objetivo · +27 d</div></div>
+          <div class="stop bad" style="left:63%"><div class="dot"></div><div class="day">Día 43</div><div class="lb">Ventana operativa</div><div class="bel">Llega el próximo ciclo</div></div>
+          <div class="stop" style="left:100%"><div class="dot"></div><div class="day">Día 73</div><div class="lb">Techo IDA</div><div class="bel">Límite legal · no ritmo objetivo</div></div>
         </div>
       </div>
-      <p style="margin-top:120px;font-family:var(--serif);font-size:1.4em;color:var(--slate-4);line-height:1.5;max-width:38em">La ventana operativa real es de <strong>30 días entre llegadas</strong>, no los 60 días que otorga la ley. Es la restricción <em>física</em> de las terminales sin colchón propio la que gobierna la gestión — no la restricción legal.</p>
+      <p style="margin-top:130px; font-size:22px; color:var(--text-secondary); line-height:1.5; max-width:38em; font-weight:400">
+        La ventana operativa real es de <strong style="color:var(--text-primary)">30 días entre llegadas</strong>, no los 60 días que otorga la ley. Es la restricción física de las terminales sin colchón propio la que gobierna la gestión — no la restricción legal.
+      </p>
     </section>
 
     <!-- 11 · SUPERPOSICIÓN ================================================= -->
-    <section class="cream">
+    <section class="light">
       <div class="eyebrow">Continuidad de suministro</div>
-      <h2 style="max-width:16em">Ciclos <em>superpuestos</em>, sin interrupción.</h2>
-      <h3 style="max-width:44em">Mientras un lote está en proceso de retiro, el ciclo siguiente ya navega hacia Paraguay. La superposición es intencional — es lo que sostiene el ritmo de 55.000 m³ mensuales sin discontinuidad.</h3>
-      <div class="overlap">
-        <div class="lbl-row">
+      <h2>Ciclos superpuestos, sin interrupción.</h2>
+      <h3>Mientras un lote está en proceso de retiro, el ciclo siguiente ya navega hacia Paraguay. La superposición es intencional y es lo que sostiene el ritmo de 55.000 m³ mensuales.</h3>
+      <div class="gantt-e">
+        <div class="hdr">
           <div>Ciclo</div>
           <div class="days"><span>Día 0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span><span>100</span></div>
         </div>
-        <div class="cy"><div class="cn">Ciclo 1</div><div class="bar">
-          <div class="b tr" style="left:0%;width:13%">TRÁNSITO 13d</div>
-          <div class="b win" style="left:13%;width:27%">VENTANA 27d</div>
+        <div class="row"><div class="cn">Ciclo 1</div><div class="bar">
+          <div class="b tr" style="left:0%;width:13%">Tránsito</div>
+          <div class="b win" style="left:13%;width:27%">Ventana 27d</div>
           <div class="b ida" style="left:40%;width:33%">IDA</div>
         </div></div>
-        <div class="cy"><div class="cn">Ciclo 2</div><div class="bar">
-          <div class="b tr" style="left:30%;width:13%">TRÁNSITO</div>
-          <div class="b win" style="left:43%;width:27%">VENTANA</div>
+        <div class="row"><div class="cn">Ciclo 2</div><div class="bar">
+          <div class="b tr" style="left:30%;width:13%">Tránsito</div>
+          <div class="b win" style="left:43%;width:27%">Ventana</div>
           <div class="b ida" style="left:70%;width:30%">IDA</div>
         </div></div>
-        <div class="cy"><div class="cn">Ciclo 3</div><div class="bar">
-          <div class="b tr" style="left:60%;width:13%">TRÁNSITO</div>
-          <div class="b win" style="left:73%;width:27%">VENTANA</div>
+        <div class="row"><div class="cn">Ciclo 3</div><div class="bar">
+          <div class="b tr" style="left:60%;width:13%">Tránsito</div>
+          <div class="b win" style="left:73%;width:27%">Ventana</div>
         </div></div>
-        <div class="cy"><div class="cn">Ciclo 4</div><div class="bar">
-          <div class="b tr" style="left:90%;width:10%">TRÁN.</div>
+        <div class="row"><div class="cn">Ciclo 4</div><div class="bar">
+          <div class="b tr" style="left:90%;width:10%">Tr.</div>
         </div></div>
       </div>
     </section>
 
-    <!-- 12 · RIESGO / PETROPAR ================================================= -->
-    <section class="forest">
+    <!-- 12 · RIESGO ================================================= -->
+    <section class="dark">
       <div class="eyebrow">Gestión de riesgo operativo</div>
-      <h2 style="color:var(--slate-1); max-width:15em">Petropar · el <em style="color:var(--gold-l)">paracaídas</em> del sistema.</h2>
-      <div class="risk-e">
+      <h2 style="max-width:14em">Petropar · el paracaídas del sistema.</h2>
+      <div class="risk-split">
         <div>
-          <div class="badge">
-            <div class="in"><div class="big">30K</div><div class="lbl">m³ Reserva</div></div>
+          <div class="risk-badge">
+            <svg viewBox="0 0 100 100">
+              <circle class="circ-bg" cx="50" cy="50" r="35"/>
+              <circle class="circ-fg" cx="50" cy="50" r="35"/>
+            </svg>
+            <div class="center">
+              <div class="n">30K</div>
+              <div class="l">m³ Reserva</div>
+            </div>
           </div>
-          <p style="text-align:center;margin-top:32px;color:rgba(255,255,255,.6);font-size:.85em;max-width:320px;margin-left:auto;margin-right:auto;font-family:var(--serif);font-style:italic;line-height:1.5">Un único bloque compartido entre los tres destinos. Un problema puntual en cualquier terminal encuentra respuesta inmediata.</p>
+          <p style="text-align:center; margin-top:28px; color:var(--text-inv-3); font-size:14px; max-width:280px; margin-left:auto; margin-right:auto; line-height:1.5">
+            Un único bloque compartido entre los tres destinos. Respuesta inmediata ante cualquier desvío.
+          </p>
         </div>
-        <ul class="risk-list-e">
-          <li><div class="n">01</div><div><strong style="color:#fff">Demora de navegación.</strong> Una bajante extraordinaria de la Hidrovía extiende el tránsito más allá de 15 días. El excedente se deriva a Petropar mientras se libera la terminal.</div></li>
-          <li><div class="n">02</div><div><strong style="color:#fff">Atraso de retiro o de venta.</strong> Un ciclo que no cierra en 30 días bloquearía la llegada del siguiente. Petropar absorbe el remanente hasta liberar espacio.</div></li>
-          <li><div class="n">03</div><div><strong style="color:#fff">Picos de volumen.</strong> Un mes con demanda superior al plan puede exceder la capacidad dedicada; el colchón acomoda el excedente sin renegociar el ciclo.</div></li>
+        <ul class="risk-list">
+          <li><div class="n">01</div><div><strong>Demora de navegación.</strong> Una bajante extraordinaria de la Hidrovía extiende el tránsito más allá de 15 días. El excedente se deriva a Petropar mientras se libera la terminal.</div></li>
+          <li><div class="n">02</div><div><strong>Atraso de retiro o de venta.</strong> Un ciclo que no cierra en 30 días bloquearía la llegada del siguiente. Petropar absorbe el remanente hasta liberar espacio.</div></li>
+          <li><div class="n">03</div><div><strong>Picos de volumen.</strong> Un mes con demanda superior al plan puede exceder la capacidad dedicada; el colchón acomoda el excedente sin renegociar el ciclo.</div></li>
         </ul>
       </div>
     </section>
 
     <!-- 13 · KPIs ================================================= -->
-    <section class="paper">
+    <section class="light">
       <div class="eyebrow">Indicadores de excelencia operativa</div>
-      <h2 style="max-width:18em">Cómo <em>medimos</em> que el modelo funciona.</h2>
-      <div class="kpi-e" style="margin-top:40px">
-        <div class="k"><div class="l">Continuidad de suministro</div><div class="v ok">12/12</div><div class="t">Ciclos ejecutados dentro de la ventana operativa mensual.</div></div>
-        <div class="k"><div class="l">OTIF Bolivia · retiro ≤27 d</div><div class="v sky">≥ 95%</div><div class="t">Objetivo interno de gestión sobre el volumen reexportado.</div></div>
-        <div class="k"><div class="l">Cumplimiento IDA · 60 d</div><div class="v gold">100%</div><div class="t">Cero incumplimientos del techo legal. Cero pérdida del régimen suspensivo.</div></div>
-        <div class="k"><div class="l">Reserva Petropar disponible</div><div class="v wine">≥ 70%</div><div class="t">Del colchón total, preservado para desvíos reales.</div></div>
+      <h2>Cómo medimos que el modelo funciona.</h2>
+      <div class="kpi-grid" style="margin-top:44px">
+        <div class="kpi-cell"><div class="l">Continuidad de suministro</div><div class="v ok">12/12</div><div class="t">Ciclos ejecutados dentro de la ventana operativa mensual.</div></div>
+        <div class="kpi-cell"><div class="l">OTIF Bolivia · retiro ≤27d</div><div class="v accent">≥ 95%</div><div class="t">Objetivo interno de gestión sobre el volumen reexportado.</div></div>
+        <div class="kpi-cell"><div class="l">Cumplimiento IDA · 60d</div><div class="v ok">100%</div><div class="t">Cero incumplimientos del techo legal · cero pérdida del régimen suspensivo.</div></div>
+        <div class="kpi-cell"><div class="l">Reserva Petropar disponible</div><div class="v alt">≥ 70%</div><div class="t">Del colchón total, preservado para desvíos reales.</div></div>
       </div>
-      <div class="kpi-e">
-        <div class="k"><div class="l">Utilización de flota</div><div class="v">79%</div><div class="t">55.000 m³ sobre 70.000 m³ de capacidad. 15.000 m³ de holgura.</div></div>
-        <div class="k"><div class="l">Tránsito fluvial</div><div class="v">10–15d</div><div class="t">Rango operativo. Referencia central 13 d para planificación.</div></div>
-        <div class="k"><div class="l">Cadencia de carga</div><div class="v">30d</div><div class="t">Intervalo mensual estricto entre operaciones en origen.</div></div>
-        <div class="k"><div class="l">Diversificación clientes</div><div class="v">5</div><div class="t">Segmentos activos entre ambos mercados. Sin concentración excesiva.</div></div>
+      <div class="kpi-grid" style="margin-top:2px">
+        <div class="kpi-cell"><div class="l">Utilización de flota</div><div class="v">79%</div><div class="t">55.000 m³ sobre 70.000 m³ de capacidad. 15.000 m³ de holgura.</div></div>
+        <div class="kpi-cell"><div class="l">Tránsito fluvial</div><div class="v">10–15d</div><div class="t">Rango operativo · referencia central 13 d para planificación.</div></div>
+        <div class="kpi-cell"><div class="l">Cadencia de carga</div><div class="v">30d</div><div class="t">Intervalo mensual estricto entre operaciones en origen.</div></div>
+        <div class="kpi-cell"><div class="l">Diversificación clientes</div><div class="v">5</div><div class="t">Segmentos activos entre ambos mercados. Sin concentración excesiva.</div></div>
       </div>
     </section>
 
-    <!-- 14 · GOBERNANZA (quote) ================================================= -->
-    <section class="wine">
+    <!-- 14 · GOBERNANZA ================================================= -->
+    <section class="dark">
       <div class="eyebrow">Modelo de gobernanza</div>
-      <div class="pull" style="color:var(--slate-1); max-width:24em">
-        Trazabilidad ciclo a ciclo. Alerta temprana continua. <em style="color:var(--gold-l)">Un panel</em> que cualquiera del equipo puede consultar en cualquier momento del día.
+      <div class="quote-block" style="max-width:24em">
+        Trazabilidad ciclo a ciclo. Alerta temprana continua. <em>Un panel</em> que cualquiera del equipo puede consultar en cualquier momento del día.
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:80px;max-width:1100px">
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:40px; margin-top:80px; max-width:1200px">
         <div>
-          <div style="font-family:var(--mono);font-size:.6em;letter-spacing:.24em;color:var(--gold-l);text-transform:uppercase;font-weight:600;margin-bottom:12px">Fuente única de verdad</div>
-          <div style="font-family:var(--serif);font-size:1.5em;font-weight:700;line-height:1.15;margin-bottom:14px">Planilla Excel en Drive</div>
-          <div style="font-size:.85em;color:rgba(255,255,255,.7);line-height:1.55">Cronograma con 12 ciclos, parámetros y semáforo. Fechas límite calculadas automáticamente.</div>
+          <div class="mono-label" style="color:var(--accent); margin-bottom:14px">Fuente única de verdad</div>
+          <div style="font-size:1.5em; font-weight:700; letter-spacing:-.02em; margin-bottom:14px">Planilla Excel en Drive</div>
+          <p style="font-size:14px; color:var(--text-inv-2); line-height:1.5">Cronograma con 12 ciclos, parámetros y semáforo. Fechas límite calculadas automáticamente.</p>
         </div>
         <div>
-          <div style="font-family:var(--mono);font-size:.6em;letter-spacing:.24em;color:var(--gold-l);text-transform:uppercase;font-weight:600;margin-bottom:12px">Sistema de alertas</div>
-          <div style="font-family:var(--serif);font-size:1.5em;font-weight:700;line-height:1.15;margin-bottom:14px">Semáforo tricolor</div>
-          <div style="font-size:.85em;color:rgba(255,255,255,.7);line-height:1.55">Verde en tiempo · amarillo excede meta · rojo excede ventana operativa. Anticipa el desvío antes que escale.</div>
+          <div class="mono-label" style="color:var(--accent); margin-bottom:14px">Sistema de alertas</div>
+          <div style="font-size:1.5em; font-weight:700; letter-spacing:-.02em; margin-bottom:14px">Semáforo tricolor</div>
+          <p style="font-size:14px; color:var(--text-inv-2); line-height:1.5">Verde en tiempo · amarillo excede meta · rojo excede ventana operativa. Anticipa el desvío antes que escale.</p>
         </div>
         <div>
-          <div style="font-family:var(--mono);font-size:.6em;letter-spacing:.24em;color:var(--gold-l);text-transform:uppercase;font-weight:600;margin-bottom:12px">Vista consolidada</div>
-          <div style="font-family:var(--serif);font-size:1.5em;font-weight:700;line-height:1.15;margin-bottom:14px">Control room en vivo</div>
-          <div style="font-size:.85em;color:rgba(255,255,255,.7);line-height:1.55">Dashboard web con estado agregado, utilización de terminales y consumo de colchón. Actualización cada 5 minutos.</div>
+          <div class="mono-label" style="color:var(--accent); margin-bottom:14px">Vista consolidada</div>
+          <div style="font-size:1.5em; font-weight:700; letter-spacing:-.02em; margin-bottom:14px">Control room en vivo</div>
+          <p style="font-size:14px; color:var(--text-inv-2); line-height:1.5">Dashboard web con estado agregado, utilización de terminales y consumo de colchón. Actualización cada 5 minutos.</p>
         </div>
       </div>
     </section>
 
     <!-- 15 · ROADMAP ================================================= -->
-    <section class="paper">
+    <section class="light">
       <div class="eyebrow">Compromisos 2026 – 2027</div>
-      <h2 style="max-width:15em">Doce ciclos. <em>Cero incumplimientos.</em></h2>
-      <div class="rm-e">
-        <div class="col">
+      <h2>Doce ciclos. Cero incumplimientos.</h2>
+      <div class="rm-grid">
+        <div class="rm-col">
           <div class="q">Q3 2026 · Inicio</div>
           <h3>Ciclos 1 a 3</h3>
           <ul>
@@ -708,7 +740,7 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
             <li>Calibración del sistema de alertas</li>
           </ul>
         </div>
-        <div class="col">
+        <div class="rm-col">
           <div class="q">Q4 2026 – Q1 2027 · Consolidación</div>
           <h3>Ciclos 4 a 8</h3>
           <ul>
@@ -718,7 +750,7 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
             <li>Diversificación de navieras en al menos 2 ciclos</li>
           </ul>
         </div>
-        <div class="col">
+        <div class="rm-col">
           <div class="q">Q2 – Q3 2027 · Cierre</div>
           <h3>Ciclos 9 a 12</h3>
           <ul>
@@ -732,10 +764,10 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
     </section>
 
     <!-- 16 · CIERRE ================================================= -->
-    <section class="deep">
+    <section class="dark">
       <div class="closing">
-        <div class="stamp">Proyecto J&F · Documento operativo · Julio 2026</div>
-        <div class="final" style="color:var(--slate-1)">Menos <em style="color:var(--gold-l)">planillas</em>.<br>Más <em style="color:var(--gold-l)">control</em>.</div>
+        <div class="stamp">Proyecto J&F · Julio 2026</div>
+        <div class="final">Menos <em>planillas</em>.<br>Más <em>control</em>.</div>
         <div class="divider"></div>
         <div class="sig">Dirección Ejecutiva · Confidencial</div>
       </div>
@@ -743,27 +775,25 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
 
     <!-- 17 · COLOFÓN ================================================= -->
     <section class="dark">
-      <div class="eyebrow" style="color:var(--gold-l)">Colofón</div>
-      <h2 style="max-width:16em; color:var(--slate-1)">Creado, diseñado y <em style="color:var(--gold-l)">desarrollado</em> por Dynker.</h2>
-      <div style="max-width:1100px;margin-top:60px;padding-top:40px;border-top:1px solid rgba(255,255,255,.15)">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
-          <div>
-            <div style="font-family:var(--mono);font-size:.6em;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-l);font-weight:700;margin-bottom:14px">Autoría</div>
-            <div style="font-family:var(--serif);font-size:2em;font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--slate-1)">Dynker Energy &amp;<br>Consulting Group</div>
-            <div style="font-size:.85em;color:rgba(255,255,255,.6);margin-top:16px;line-height:1.5;max-width:26em;font-family:var(--serif);font-style:italic">Concepción estratégica, arquitectura operativa, marco financiero y sistema de gobernanza del programa de suministro.</div>
-          </div>
-          <div>
-            <div style="font-family:var(--mono);font-size:.6em;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-l);font-weight:700;margin-bottom:14px">Acuerdo de implementación</div>
-            <div style="font-family:var(--serif);font-size:1.4em;font-weight:700;line-height:1.35;color:var(--slate-1)">
-              Dynker E&amp;C Group<br>
-              <span style="color:rgba(255,255,255,.5);font-weight:400;font-style:italic">·</span> Adecomi<br>
-              <span style="color:rgba(255,255,255,.5);font-weight:400;font-style:italic">·</span> Pessasa
-            </div>
-            <div style="font-size:.85em;color:rgba(255,255,255,.6);margin-top:16px;line-height:1.5;max-width:26em;font-family:var(--serif);font-style:italic">Tripartito operativo que sostiene la ejecución del programa J&amp;F desde Argentina hasta destino final en Bolivia y Paraguay.</div>
-          </div>
+      <div class="eyebrow">Colofón</div>
+      <h2 style="max-width:16em">Creado, diseñado y desarrollado por <span style="background:linear-gradient(90deg,var(--accent),var(--alt)); -webkit-background-clip:text; -webkit-text-fill-color:transparent">Dynker</span>.</h2>
+      <div class="colofon-grid">
+        <div class="colofon-col">
+          <div class="k">Autoría</div>
+          <h4>Dynker Energy &amp;<br>Consulting Group</h4>
+          <p>Concepción estratégica, arquitectura operativa, marco financiero y sistema de gobernanza del programa de suministro.</p>
+        </div>
+        <div class="colofon-col">
+          <div class="k">Acuerdo de implementación</div>
+          <ul class="colofon-partners">
+            <li>Dynker E&amp;C Group</li>
+            <li>Adecomi</li>
+            <li>Pessasa</li>
+          </ul>
+          <p style="margin-top:20px">Tripartito operativo que sostiene la ejecución del programa desde Argentina hasta destino final en Bolivia y Paraguay.</p>
         </div>
       </div>
-      <div style="margin-top:80px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:600">
+      <div style="margin-top:80px; padding-top:24px; border-top:1px solid var(--border-dark); display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--text-inv-3); font-weight:500">
         <div>© 2026 Dynker Energy &amp; Consulting Group</div>
         <div>Todos los derechos reservados</div>
       </div>
@@ -772,18 +802,14 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
   </div>
 </div>
 
-<!-- ============ CHROME PERSISTENTE · Firma editorial en cada slide ============ -->
-<div class="chrome-persistent" id="chrome">
-  <div class="chrome-brand">
-    <span class="chrome-mark">DYNKER</span>
-    <span class="chrome-mono chrome-tag">Energy &amp; Consulting Group</span>
+<!-- ============ CHROME PERSISTENTE ============ -->
+<div class="chrome-p" id="chrome">
+  <div class="brand">
+    <span class="mark">DYNKER</span>
+    <span class="tag">Energy &amp; Consulting Group</span>
   </div>
-  <div class="chrome-mono chrome-agreement">
-    Diseñado y desarrollado por <b>DYNKER</b> · Acuerdo de implementación con Adecomi &amp; Pessasa
-  </div>
-  <div class="chrome-mono chrome-project">
-    <span class="dot"></span>Proyecto J&amp;F · <span id="chromePage">01</span> / 17
-  </div>
+  <div class="agr">Diseñado y desarrollado por <b>DYNKER</b> · Acuerdo con Adecomi &amp; Pessasa</div>
+  <div class="proj"><span class="dot"></span>Proyecto J&amp;F · <span id="chromePage">01 / 17</span></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.min.js"></script>
@@ -791,32 +817,21 @@ section.dark ~ .reveal .progress{background:rgba(255,255,255,.1)}
 Reveal.initialize({
   hash:true,
   transition:'slide',
-  transitionSpeed:'default',
+  transitionSpeed:'fast',
   backgroundTransition:'fade',
-  width:1400,
-  height:900,
-  margin:0.02,
-  minScale:0.3,
-  maxScale:1.4,
-  controls:false,
-  progress:true,
-  center:false,
-  overview:true,
-  touch:true
+  width:1400, height:900,
+  margin:0.02, minScale:0.3, maxScale:1.4,
+  controls:false, progress:true, center:false, overview:true, touch:true
 });
-
-/* Adaptación del chrome al fondo del slide activo */
 function updateChrome(){
   const cur = Reveal.getCurrentSlide();
   if(!cur) return;
-  const isLight = cur.classList.contains('paper') || cur.classList.contains('cream') || cur.classList.contains('slate');
+  const isLight = cur.classList.contains('light');
   const chrome = document.getElementById('chrome');
   chrome.classList.toggle('light', isLight);
   const idx = Reveal.getIndices().h + 1;
   const total = Reveal.getTotalSlides();
-  document.getElementById('chromePage').textContent = String(idx).padStart(2,'0');
-  const proj = document.querySelector('.chrome-project');
-  if(proj) proj.innerHTML = '<span class="dot"></span>Proyecto J&amp;F · ' + String(idx).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+  document.getElementById('chromePage').textContent = String(idx).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
 }
 Reveal.on('ready', updateChrome);
 Reveal.on('slidechanged', updateChrome);
