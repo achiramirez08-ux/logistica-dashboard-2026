@@ -256,6 +256,37 @@ body{background:var(--tblr-body-bg); background-image:
     </div>
   </div>
 
+  <!-- ============ EXECUTIVE STATUS BANNER · vista directorio ============ -->
+  <div class="row g-3 mb-1">
+    <div class="col-12">
+      <div class="card" id="execBanner" style="background:linear-gradient(90deg, rgba(255,255,255,.02), transparent); border-left:4px solid var(--tblr-success)">
+        <div class="card-body" style="padding:20px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px">
+          <div style="display:flex; align-items:center; gap:20px">
+            <div id="execDot" style="width:14px; height:14px; border-radius:50%; background:var(--tblr-success); box-shadow:0 0 12px var(--tblr-success)"></div>
+            <div>
+              <div class="text-mono" style="font-size:10px; letter-spacing:2px; color:var(--tblr-muted); text-transform:uppercase; font-weight:600">Estado del programa</div>
+              <div id="execStatus" style="font-size:22px; font-weight:800; letter-spacing:-.3px; margin-top:2px">VERDE · sin desviaciones</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:32px; flex-wrap:wrap">
+            <div>
+              <div class="text-mono" style="font-size:10px; letter-spacing:2px; color:var(--tblr-muted); text-transform:uppercase; font-weight:600">Contexto</div>
+              <div id="execContext" style="font-size:15px; font-weight:600; margin-top:4px">—</div>
+            </div>
+            <div>
+              <div class="text-mono" style="font-size:10px; letter-spacing:2px; color:var(--tblr-muted); text-transform:uppercase; font-weight:600">Próximo hito</div>
+              <div id="execNext" style="font-size:15px; font-weight:600; margin-top:4px">—</div>
+            </div>
+            <div>
+              <div class="text-mono" style="font-size:10px; letter-spacing:2px; color:var(--tblr-muted); text-transform:uppercase; font-weight:600">Atención requerida</div>
+              <div id="execAlerts" style="font-size:15px; font-weight:600; margin-top:4px">0 ciclos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ HERO KPIs ============ -->
   <div class="row g-3" id="hero"></div>
 
@@ -405,19 +436,19 @@ body{background:var(--tblr-body-bg); background-image:
     </div>
   </div>
 
-  <!-- ============ EDITOR ============ -->
-  <div class="row g-3 mt-1">
+  <!-- ============ EDITOR · colapsado por defecto ============ -->
+  <div class="row g-3 mt-1" id="editorSection" style="display:none">
     <div class="col-12">
       <div class="card" id="editorCard">
         <div class="card-header">
           <div>
             <h3 class="card-title">Editor de datos reales · override manual</h3>
-            <div class="card-subtitle">Sobrescribe temporalmente los valores del Sheet. Usar solo para simulaciones o si el Sheet no está sincronizado.</div>
+            <div class="card-subtitle">Sobrescribe temporalmente los valores del Sheet. Solo para simulaciones o testing.</div>
           </div>
           <div class="card-actions d-flex gap-2">
             <button class="btn btn-sm btn-outline-secondary" id="btnReset"><i class="ti ti-arrow-back-up"></i> Volver al plan</button>
-            <button class="btn btn-sm btn-outline-secondary" id="btnExport"><i class="ti ti-download"></i> Exportar JSON</button>
             <button class="btn btn-sm btn-primary" id="btnRecalc"><i class="ti ti-refresh"></i> Recalcular</button>
+            <button class="btn btn-sm btn-outline-secondary" id="btnCloseEditor"><i class="ti ti-x"></i> Ocultar</button>
           </div>
         </div>
         <div class="card-body p-0">
@@ -434,6 +465,15 @@ body{background:var(--tblr-body-bg); background-image:
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Botón discreto para abrir editor (modo operador) -->
+  <div class="row g-3 mt-1">
+    <div class="col-12 text-center">
+      <button class="drawer-toggle" id="btnOpenEditor" style="opacity:.55">
+        <i class="ti ti-tool"></i> Modo edición (operador)
+      </button>
     </div>
   </div>
 
@@ -548,12 +588,12 @@ function renderHero(rows){
   const otif = otifPast.length===0 ? null : otifPast.filter(c=>c.estBo.c==="ok"||c.estBo.l==="Completado").length/otifPast.length;
 
   const kpis=[
-    {tone:"info", lbl:"Volumen plan · anual", val:fmtNum(P.total*12), unit:"m³", foot:`12 ciclos · ${fmtNum(P.total)} m³/mes`, badge:`<span class="pill info">660K anuales</span>`},
-    {tone:"ok", lbl:"Avance retiro Bolivia", val:fmtPct(boReal/boPlanAcum), unit:"", foot:`${fmtNum(boReal)} / ${fmtNum(boPlanAcum)} m³`, bar:boReal/boPlanAcum, badge:`<span class="pill ${boReal/boPlanAcum>=0.9?'ok':'warn'}">${boReal/boPlanAcum>=0.9?'On track':'Behind'}</span>`},
-    {tone:"ok", lbl:"Avance despacho Local", val:fmtPct(loReal/loPlanAcum), unit:"", foot:`${fmtNum(loReal)} / ${fmtNum(loPlanAcum)} m³`, bar:loReal/loPlanAcum, badge:`<span class="pill ${loReal/loPlanAcum>=0.9?'ok':'warn'}">${loReal/loPlanAcum>=0.9?'On track':'Behind'}</span>`},
-    {tone:otif===null?"info":(otif>=0.9?"ok":otif>=0.7?"warn":"bad"), lbl:"OTIF Bolivia · retiro ≤27d", val:otif===null?"—":fmtPct(otif), unit:"", foot:otif===null?"Sin ciclos con llegada real":`${otifPast.length} ciclos evaluados`, badge:otif===null?'<span class="pill mut">Pendiente</span>':`<span class="pill ${otif>=0.9?'ok':otif>=0.7?'warn':'bad'}">${otif>=0.9?'World-class':otif>=0.7?'Aceptable':'Riesgo'}</span>`},
-    {tone:colchon/P.capPetropar<0.3?"ok":colchon/P.capPetropar<0.7?"warn":"bad", lbl:"Colchón Petropar usado", val:fmtNum(colchon), unit:"m³", foot:`${fmtPct(colchon/P.capPetropar)} de ${fmtNum(P.capPetropar)} m³`, bar:colchon/P.capPetropar, badge:`<span class="pill ${colchon/P.capPetropar<0.3?'ok':colchon/P.capPetropar<0.7?'warn':'bad'}">${colchon/P.capPetropar<0.3?'Sano':colchon/P.capPetropar<0.7?'Uso medio':'Agotándose'}</span>`},
-    {tone:inRiesgo===0?"ok":inRiesgo<=2?"warn":"bad", lbl:"Ciclos con alerta", val:inRiesgo, unit:"/12", foot:`Flota ${(P.total/(P.flotaMercurio+P.flotaNavios+P.flotaRockTree)*100).toFixed(0)}% util. · Holgura ${fmtNum(P.flotaMercurio+P.flotaNavios+P.flotaRockTree-P.total)} m³`, badge:`<span class="pill ${inRiesgo===0?'ok':inRiesgo<=2?'warn':'bad'}">${inRiesgo===0?'Verde':inRiesgo<=2?'Vigilar':'Acción'}</span>`}
+    {tone:"info", lbl:"Volumen anual planificado", val:fmtNum(P.total*12), unit:"m³", foot:`12 ciclos · ${fmtNum(P.total)} m³/mes`, badge:`<span class="pill info">660K anuales</span>`},
+    {tone:"ok", lbl:"Cumplimiento retiro Bolivia", val:fmtPct(boReal/boPlanAcum), unit:"", foot:`${fmtNum(boReal)} / ${fmtNum(boPlanAcum)} m³`, bar:boReal/boPlanAcum, badge:`<span class="pill ${boReal/boPlanAcum>=0.9?'ok':'warn'}">${boReal/boPlanAcum>=0.9?'En plan':'Atrás'}</span>`},
+    {tone:"ok", lbl:"Cumplimiento despacho Local", val:fmtPct(loReal/loPlanAcum), unit:"", foot:`${fmtNum(loReal)} / ${fmtNum(loPlanAcum)} m³`, bar:loReal/loPlanAcum, badge:`<span class="pill ${loReal/loPlanAcum>=0.9?'ok':'warn'}">${loReal/loPlanAcum>=0.9?'En plan':'Atrás'}</span>`},
+    {tone:otif===null?"info":(otif>=0.9?"ok":otif>=0.7?"warn":"bad"), lbl:"Retiro dentro de meta 27d", val:otif===null?"—":fmtPct(otif), unit:"", foot:otif===null?"Sin ciclos con llegada real":`${otifPast.length} ciclos evaluados`, badge:otif===null?'<span class="pill mut">Pendiente</span>':`<span class="pill ${otif>=0.9?'ok':otif>=0.7?'warn':'bad'}">${otif>=0.9?'Excelente':otif>=0.7?'Aceptable':'Riesgo'}</span>`},
+    {tone:colchon/P.capPetropar<0.3?"ok":colchon/P.capPetropar<0.7?"warn":"bad", lbl:"Reserva contingencia consumida", val:fmtNum(colchon), unit:"m³", foot:`${fmtPct(colchon/P.capPetropar)} de ${fmtNum(P.capPetropar)} m³`, bar:colchon/P.capPetropar, badge:`<span class="pill ${colchon/P.capPetropar<0.3?'ok':colchon/P.capPetropar<0.7?'warn':'bad'}">${colchon/P.capPetropar<0.3?'Preservada':colchon/P.capPetropar<0.7?'Uso medio':'Agotándose'}</span>`},
+    {tone:inRiesgo===0?"ok":inRiesgo<=2?"warn":"bad", lbl:"Ciclos con atención requerida", val:inRiesgo, unit:"/12", foot:`Flota ${(P.total/(P.flotaMercurio+P.flotaNavios+P.flotaRockTree)*100).toFixed(0)}% util. · Holgura ${fmtNum(P.flotaMercurio+P.flotaNavios+P.flotaRockTree-P.total)} m³`, badge:`<span class="pill ${inRiesgo===0?'ok':inRiesgo<=2?'warn':'bad'}">${inRiesgo===0?'Verde':inRiesgo<=2?'Vigilar':'Acción'}</span>`}
   ];
   document.getElementById("hero").innerHTML = kpis.map(k=>`
     <div class="col-md-6 col-xl-2">
@@ -838,9 +878,80 @@ function renderEditor(){
   });
 }
 
+/* ================== EXECUTIVE BANNER ================== */
+function renderExecBanner(rows){
+  const TODAY=new Date();TODAY.setHours(0,0,0,0);
+  const inRiesgo=rows.filter(c=>c.estBo.c==="warn"||c.estBo.c==="bad"||c.estLo.c==="warn"||c.estLo.c==="bad").length;
+  const cicloAct = rows.find(x=>TODAY>=x.carga && TODAY<=x.limIda);
+  const proxCiclo = rows.find(x=>TODAY<x.carga);
+
+  // Estado global
+  const banner = document.getElementById("execBanner");
+  const dot = document.getElementById("execDot");
+  const status = document.getElementById("execStatus");
+  const critico = rows.some(c=>c.estBo.c==="bad"||c.estLo.c==="bad");
+  const riesgo = rows.some(c=>c.estBo.c==="warn"||c.estLo.c==="warn");
+
+  if(critico){
+    banner.style.borderLeftColor="var(--tblr-danger)";
+    dot.style.background="var(--tblr-danger)"; dot.style.boxShadow="0 0 12px var(--tblr-danger)";
+    status.textContent="ROJO · atención inmediata";
+    status.style.color="var(--tblr-danger)";
+  } else if(riesgo){
+    banner.style.borderLeftColor="var(--tblr-warning)";
+    dot.style.background="var(--tblr-warning)"; dot.style.boxShadow="0 0 12px var(--tblr-warning)";
+    status.textContent="AMARILLO · vigilar";
+    status.style.color="var(--tblr-warning)";
+  } else {
+    banner.style.borderLeftColor="var(--tblr-success)";
+    dot.style.background="var(--tblr-success)"; dot.style.boxShadow="0 0 12px var(--tblr-success)";
+    status.textContent="VERDE · sin desviaciones";
+    status.style.color="var(--tblr-success)";
+  }
+
+  // Contexto: hoy = día X del ciclo Y, o programa no iniciado
+  const contextEl = document.getElementById("execContext");
+  if(cicloAct){
+    const diasEnCiclo = daysBetween(cicloAct.carga, TODAY);
+    contextEl.innerHTML = `Día ${diasEnCiclo} del Ciclo ${cicloAct.ciclo}`;
+  } else if(proxCiclo){
+    const diasParaInicio = daysBetween(TODAY, proxCiclo.carga);
+    contextEl.innerHTML = `Programa aún no iniciado · faltan ${diasParaInicio}d para Ciclo ${proxCiclo.ciclo}`;
+  } else {
+    contextEl.innerHTML = `Programa concluido`;
+  }
+
+  // Próximo hito
+  const nextEl = document.getElementById("execNext");
+  if(cicloAct){
+    let siguienteHito, nombre;
+    if(TODAY<cicloAct.llegada){ siguienteHito=cicloAct.llegada; nombre="Llegada"; }
+    else if(TODAY<cicloAct.metaRetiro){ siguienteHito=cicloAct.metaRetiro; nombre="Meta retiro"; }
+    else if(TODAY<cicloAct.limOp){ siguienteHito=cicloAct.limOp; nombre="Ventana operativa"; }
+    else if(TODAY<cicloAct.limIda){ siguienteHito=cicloAct.limIda; nombre="Techo IDA"; }
+    if(siguienteHito){
+      const dias = daysBetween(TODAY, siguienteHito);
+      nextEl.innerHTML = `${nombre} en ${dias}d · ${fmtDate(fmt(siguienteHito))}`;
+    } else nextEl.textContent = "Ciclo cerrado";
+  } else if(proxCiclo){
+    nextEl.innerHTML = `Carga Ciclo ${proxCiclo.ciclo} · ${fmtDate(proxCiclo.cargaArg)}`;
+  } else {
+    nextEl.textContent = "—";
+  }
+
+  // Atención
+  const alertsEl = document.getElementById("execAlerts");
+  if(inRiesgo===0){
+    alertsEl.innerHTML = `<span style="color:var(--tblr-success)">Ninguno</span>`;
+  } else {
+    alertsEl.innerHTML = `<span style="color:${critico?'var(--tblr-danger)':'var(--tblr-warning)'}">${inRiesgo} ciclo${inRiesgo>1?'s':''}</span>`;
+  }
+}
+
 /* ================== RENDER MAESTRO ================== */
 function render(){
   const rows=computeAll();
+  renderExecBanner(rows);
   renderHero(rows);
   renderSpotlight(rows);
   renderTerminals(rows);
@@ -933,10 +1044,16 @@ async function syncDrive(){
 document.getElementById("btnReset").onclick=()=>{ if(confirm("¿Restaurar valores del plan?")){ DATA=buildPlan(); save(); renderEditor(); render(); } };
 document.getElementById("btnRecalc").onclick=()=>render();
 document.getElementById("btnRefresh").onclick=()=>syncDrive();
-document.getElementById("btnExport").onclick=()=>{
-  const blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="seguimiento_cargas_JF.json"; a.click();
-};
+
+/* Editor toggle · abre con click, se abre auto si URL trae ?edit=1 */
+const editorSection = document.getElementById("editorSection");
+const btnOpenEditor = document.getElementById("btnOpenEditor");
+const btnCloseEditor = document.getElementById("btnCloseEditor");
+function showEditor(){ editorSection.style.display=""; btnOpenEditor.style.display="none"; editorSection.scrollIntoView({behavior:"smooth"}); }
+function hideEditor(){ editorSection.style.display="none"; btnOpenEditor.style.display=""; }
+btnOpenEditor.onclick = showEditor;
+btnCloseEditor.onclick = hideEditor;
+if(new URLSearchParams(location.search).get("edit")==="1") showEditor();
 
 function tick(){
   const d=new Date();
