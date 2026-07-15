@@ -69,15 +69,17 @@ html,body{
 .reveal em{font-style:normal; color:var(--accent); font-weight:700}
 .reveal a{color:var(--accent); text-decoration:none}
 
-/* SLIDE BASE — todas centradas verticalmente y con padding consistente */
+/* SLIDE BASE — padding calibrado para dejar zona limpia arriba y espacio para chrome abajo.
+   Chrome persistente ocupa 44px inferior; padding-bottom 96px garantiza clearance de 52px */
 .reveal .slides section{
-  padding:96px 128px !important;
+  padding:64px 128px 96px !important;
   height:100%;
   display:flex !important;
   flex-direction:column;
   justify-content:center;
 }
-.reveal .slides section.top{justify-content:flex-start; padding-top:96px !important}
+/* .top = contenido denso: alinea arriba pero SIN padding extra (el base ya lo tiene calibrado) */
+.reveal .slides section.top{justify-content:flex-start}
 
 /* ============ TEMAS ============ */
 .reveal .slides section.light{background:var(--paper); color:var(--ink)}
@@ -309,43 +311,38 @@ html,body{
 .doc-card .refs .ref .d{font-size:14px; color:var(--muted); line-height:1.5}
 
 /* ============ TIMELINE VERTICAL ============
-   Reemplaza el ribbon horizontal problemático con
-   timeline vertical: sin superposiciones, cada hito
-   con su descripción a un lado.
+   Compacto para caber en el viewport sin overflow.
+   5 stops × ~90px + header ~200px = ~650px (fits en 900px área útil)
 ============================================================ */
 .timeline-v{
   display:flex; flex-direction:column; gap:0;
-  margin-top:32px; max-width:900px;
+  margin-top:20px; max-width:1000px;
 }
 .timeline-v .stop{
-  display:grid; grid-template-columns:110px 1fr; gap:32px;
-  padding:24px 0; align-items:center; position:relative;
+  display:grid; grid-template-columns:130px 1fr; gap:36px;
+  padding:14px 0; align-items:center; position:relative;
 }
-.timeline-v .stop::after{
-  content:""; position:absolute; left:74px; top:60%; bottom:-24px;
-  width:2px; background:var(--border-strong);
-}
-.timeline-v .stop:last-child::after{display:none}
+.timeline-v .stop::after{display:none}
 .timeline-v .stop .day{
-  font-size:44px; font-weight:800; letter-spacing:-.03em; line-height:1; text-align:right;
+  font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1; text-align:right;
   padding-right:24px; border-right:3px solid var(--muted-2); position:relative;
 }
 .timeline-v .stop.ok .day{border-color:var(--ok); color:var(--ink)}
 .timeline-v .stop.warn .day{border-color:var(--warn); color:var(--ink)}
 .timeline-v .stop.bad .day{border-color:var(--bad); color:var(--ink)}
 .timeline-v .stop .day .u{
-  display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.16em;
+  display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
   color:var(--muted); text-transform:uppercase; font-weight:600; margin-top:6px;
 }
 .timeline-v .stop .content .label{
-  font-family:var(--font-mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted); font-weight:600; margin-bottom:6px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin-bottom:4px;
 }
 .timeline-v .stop.ok .content .label{color:var(--ok)}
 .timeline-v .stop.warn .content .label{color:var(--warn)}
 .timeline-v .stop.bad .content .label{color:var(--bad)}
-.timeline-v .stop .content .title{font-size:26px; font-weight:700; letter-spacing:-.02em; line-height:1.15; margin-bottom:6px}
-.timeline-v .stop .content .desc{font-size:16px; color:var(--muted); line-height:1.5; max-width:36em}
+.timeline-v .stop .content .title{font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.15; margin-bottom:4px}
+.timeline-v .stop .content .desc{font-size:14px; color:var(--muted); line-height:1.5; max-width:38em}
 
 /* ============ GANTT SUPERPOSITION ============ */
 .gantt{
@@ -478,24 +475,26 @@ html,body{
   text-transform:uppercase; color:var(--inv-3); font-weight:500;
 }
 
-/* ============ CHROME PERSISTENTE — MÁS SUTIL ============ */
+/* ============ CHROME PERSISTENTE — sólido, sutil, NO se monta sobre contenido ============ */
 .chrome-p{
   position:fixed; left:0; right:0; bottom:0;
-  padding:12px 32px; height:44px;
+  padding:10px 32px; height:36px;
   display:flex; justify-content:space-between; align-items:center;
   z-index:200; pointer-events:none;
-  background:linear-gradient(to top, rgba(14,15,17,.85), rgba(14,15,17,.35) 60%, transparent);
+  background:var(--dark-bg);
   color:var(--inv-3);
-  transition:background .35s, color .35s;
-  font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
+  transition:background .35s, color .35s, border-color .35s;
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em;
   text-transform:uppercase; font-weight:500;
+  border-top:1px solid var(--dark-border);
 }
 .chrome-p.light{
-  background:linear-gradient(to top, rgba(250,249,246,.92), rgba(250,249,246,.35) 60%, transparent);
+  background:var(--paper);
   color:var(--muted);
+  border-top-color:var(--border);
 }
 .chrome-p .left{display:flex; align-items:center; gap:12px}
-.chrome-p .mark{font-size:14px; font-weight:800; letter-spacing:.28em; color:var(--accent)}
+.chrome-p .mark{font-size:12px; font-weight:800; letter-spacing:.28em; color:var(--accent)}
 .chrome-p .right{display:flex; align-items:center; gap:10px}
 .chrome-p .right .dot{width:5px; height:5px; border-radius:50%; background:var(--accent)}
 
@@ -646,7 +645,7 @@ html,body{
     </section>
 
     <!-- ================ 6 · CIFRAS ================ -->
-    <section class="dark top">
+    <section class="dark">
       <div class="eyebrow">La operación en números</div>
       <h2 style="max-width:16em">La magnitud del programa mensual.</h2>
       <div class="stats">
@@ -725,7 +724,7 @@ html,body{
     </section>
 
     <!-- ================ 9 · ACTIVOS ================ -->
-    <section class="dark top">
+    <section class="dark">
       <div class="eyebrow">Activos estratégicos</div>
       <h2>Flota fluvial y red de terminales.</h2>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:80px; margin-top:32px">
@@ -851,8 +850,29 @@ html,body{
       </div>
     </section>
 
-    <!-- ================ 12 · RIESGO ================ -->
-    <section class="dark top">
+    <!-- ================ 12 · CALENDARIO 12 CICLOS ================ -->
+    <section class="light top">
+      <div class="eyebrow">Cronograma anual del programa</div>
+      <h2>Doce ciclos, catorce meses.</h2>
+      <h3>Ritmo mensual encadenado desde la primera carga hasta el cierre del último techo IDA. Fecha de inicio oficial pendiente de confirmación · el cronograma se ancla al mes de arranque.</h3>
+      <div class="gantt" style="padding:36px 40px">
+        <div class="hdr" style="grid-template-columns:100px 1fr">
+          <div>Ciclo</div>
+          <div style="display:grid; grid-template-columns:repeat(14,1fr); text-align:left; font-size:10px">
+            <span>Mes 1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
+          </div>
+        </div>
+        <div id="gantt12"></div>
+      </div>
+      <div style="display:flex; gap:32px; margin-top:20px; font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:600">
+        <span><span style="display:inline-block; width:10px; height:10px; background:var(--accent); border-radius:2px; margin-right:8px; vertical-align:middle"></span>Tránsito ~13d</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:var(--ok); border-radius:2px; margin-right:8px; vertical-align:middle"></span>Ventana operativa 27d</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:var(--warn); opacity:.7; border-radius:2px; margin-right:8px; vertical-align:middle"></span>Colchón IDA 33d</span>
+      </div>
+    </section>
+
+    <!-- ================ 13 · RIESGO ================ -->
+    <section class="dark">
       <div class="eyebrow">Gestión de riesgo operativo</div>
       <h2 style="max-width:14em">Petropar — el paracaídas del sistema.</h2>
       <div class="risk-split">
@@ -959,7 +979,41 @@ html,body{
       </div>
     </section>
 
-    <!-- ================ 16 · CIERRE ================ -->
+    <!-- ================ · SUPUESTOS DEL MODELO ================ -->
+    <section class="light top">
+      <div class="eyebrow">Supuestos del modelo</div>
+      <h2>Premisas explícitas que sostienen el programa.</h2>
+      <h3>Cinco supuestos operativos que gobiernan todos los cálculos del cronograma y la asignación de terminales.</h3>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:20px">
+        <div style="padding:32px 32px; background:var(--paper-2); border-radius:12px; border-left:3px solid var(--accent)">
+          <div class="mono accent" style="margin-bottom:12px">Supuesto 01 · Distribución de descarga</div>
+          <div style="font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.2; margin-bottom:8px">Split 50/50 entre Petrosan y Fuel Par</div>
+          <p style="font-size:15px; color:var(--muted); line-height:1.5">Los 40.000 m³ Bolivia se descargan en partes iguales de 20.000 m³ en cada terminal, ajustable por ciclo si la logística lo requiere.</p>
+        </div>
+        <div style="padding:32px 32px; background:var(--paper-2); border-radius:12px; border-left:3px solid var(--accent)">
+          <div class="mono accent" style="margin-bottom:12px">Supuesto 02 · Capacidad dedicada</div>
+          <div style="font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.2; margin-bottom:8px">Petrosan, Fuel Par e Integral con colchón propio = 0</div>
+          <p style="font-size:15px; color:var(--muted); line-height:1.5">La capacidad dedicada iguala exactamente el volumen mensual. La disciplina de retiro no es negociable.</p>
+        </div>
+        <div style="padding:32px 32px; background:var(--paper-2); border-radius:12px; border-left:3px solid var(--accent)">
+          <div class="mono accent" style="margin-bottom:12px">Supuesto 03 · Ventana operativa real</div>
+          <div style="font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.2; margin-bottom:8px">30 días entre llegadas, no los 60 legales IDA</div>
+          <p style="font-size:15px; color:var(--muted); line-height:1.5">El límite físico de las terminales es lo que gobierna la gestión, no el techo aduanero. El plazo legal queda como colchón de contingencia.</p>
+        </div>
+        <div style="padding:32px 32px; background:var(--paper-2); border-radius:12px; border-left:3px solid var(--accent)">
+          <div class="mono accent" style="margin-bottom:12px">Supuesto 04 · Colchón Petropar</div>
+          <div style="font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.2; margin-bottom:8px">Reserva compartida, no asignada por ciclo</div>
+          <p style="font-size:15px; color:var(--muted); line-height:1.5">Los 30.000 m³ de Petropar se reservan como colchón único para las tres terminales, no fragmentados. Se activan solo ante desvíos reales.</p>
+        </div>
+        <div style="padding:32px 32px; background:var(--paper-2); border-radius:12px; border-left:3px solid var(--accent); grid-column:span 2">
+          <div class="mono accent" style="margin-bottom:12px">Supuesto 05 · Capacidad Integral actualizada</div>
+          <div style="font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.2; margin-bottom:8px">Terminal Integral confirmada en 15.000 m³ (jul 2026)</div>
+          <p style="font-size:15px; color:var(--muted); line-height:1.5">Actualización sobre supuesto inicial de 10.000 m³. Permite absorber el 100% del volumen local mensual sin colchón externo, alineando su capacidad al volumen dedicado.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================ CIERRE ================ -->
     <section class="dark">
       <div class="closing-page">
         <div class="stamp">Proyecto J&F · Julio 2026</div>
@@ -1038,6 +1092,32 @@ function updateChrome(){
 }
 Reveal.on('ready', updateChrome);
 Reveal.on('slidechanged', updateChrome);
+
+/* ================ RENDER GANTT 12 CICLOS ================ */
+(function renderGantt12(){
+  const el = document.getElementById('gantt12');
+  if(!el) return;
+  const TOTAL_DAYS = 420; // ~14 meses
+  const TRANSITO = 13, VENTANA = 27, IDA_EXT = 33, SPACING = 30;
+  let html = '';
+  for(let i=1; i<=12; i++){
+    const start = (i-1) * SPACING;
+    const trPct = (TRANSITO/TOTAL_DAYS)*100;
+    const winPct = (VENTANA/TOTAL_DAYS)*100;
+    const idaPct = (IDA_EXT/TOTAL_DAYS)*100;
+    const startPct = (start/TOTAL_DAYS)*100;
+    html += `
+      <div class="row" style="padding:8px 0">
+        <div class="cn" style="font-size:14px">Ciclo ${i.toString().padStart(2,'0')}</div>
+        <div class="bar" style="height:22px">
+          <div class="b tr" style="left:${startPct}%; width:${trPct}%; font-size:9px; padding:0 4px">${i===1?'Tr':''}</div>
+          <div class="b win" style="left:${startPct+trPct}%; width:${winPct}%; font-size:9px; padding:0 4px">${i===1?'27d':''}</div>
+          <div class="b ida" style="left:${startPct+trPct+winPct}%; width:${idaPct}%; font-size:9px; padding:0 4px">${i===1?'IDA':''}</div>
+        </div>
+      </div>`;
+  }
+  el.innerHTML = html;
+})();
 </script>
 </body>
 </html>
