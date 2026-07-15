@@ -53,10 +53,9 @@ html,body{
 }
 
 /* ============ REVEAL RESETS ============ */
-/* Letterboxing negro cinematico: cuando el viewport no matchea 1920x1080,
-   el margen queda en negro (frame cinematico) en vez de crema chocante */
+/* Letterboxing solo en el body (no en .reveal para no interferir con la renderizacion de secciones) */
 html,body{background:#000}
-.reveal{background:#000}
+.reveal{background:transparent}
 .reveal, .reveal .slides section{
   font-family:var(--font-sans); text-align:left; font-weight:400; color:var(--ink);
 }
@@ -85,8 +84,8 @@ html,body{background:#000}
 .reveal .slides section.top{justify-content:flex-start}
 
 /* ============ TEMAS ============ */
-.reveal .slides section.light{background:var(--paper); color:var(--ink)}
-.reveal .slides section.dark{background:var(--dark-bg); color:var(--inv)}
+.reveal .slides section.light{background:var(--paper) !important; color:var(--ink) !important}
+.reveal .slides section.dark{background:var(--dark-bg) !important; color:var(--inv) !important}
 .reveal .slides section.dark h1,
 .reveal .slides section.dark h2,
 .reveal .slides section.dark h4{color:var(--inv)}
