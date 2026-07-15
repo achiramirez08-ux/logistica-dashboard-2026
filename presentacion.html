@@ -53,7 +53,10 @@ html,body{
 }
 
 /* ============ REVEAL RESETS ============ */
-.reveal{background:var(--paper)}
+/* Letterboxing negro cinematico: cuando el viewport no matchea 1920x1080,
+   el margen queda en negro (frame cinematico) en vez de crema chocante */
+html,body{background:#000}
+.reveal{background:#000}
 .reveal, .reveal .slides section{
   font-family:var(--font-sans); text-align:left; font-weight:400; color:var(--ink);
 }
@@ -118,47 +121,59 @@ html,body{
 .dark .pill{border-color:var(--dark-border-2); color:var(--inv-2)}
 .pill.accent{background:var(--accent-soft); border-color:transparent; color:var(--accent)}
 
-/* ============ 1 · COVER ============ */
-.hero-cover{
-  position:relative; height:100vh;
-  display:flex; flex-direction:column; justify-content:center;
+/* ============ 1 · COVER · rediseño flexbox sin overlap ============ */
+.reveal .slides section.cover-slide{
   padding:0 !important;
   background:var(--dark-bg);
   overflow:hidden;
+  position:relative;
 }
-.hero-cover::before{
-  content:""; position:absolute; inset:0; pointer-events:none;
+.reveal .slides section.cover-slide::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(220,90,42,.18), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(220,90,42,.08), transparent 60%);
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(220,90,42,.18), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(220,90,42,.08), transparent 55%);
 }
-.hero-cover .bar-top, .hero-cover .bar-btm{
-  position:absolute; left:128px; right:128px;
+.hero-cover{
+  position:relative; z-index:1;
+  height:100%; width:100%;
+  display:flex; flex-direction:column;
+  padding:56px 128px 84px;
+}
+.hero-cover .hcv-top{
   display:flex; justify-content:space-between; align-items:center;
-  font-family:var(--font-mono); font-size:14px; letter-spacing:.16em;
-  text-transform:uppercase; color:var(--inv-3); z-index:2;
+  font-family:var(--font-mono); font-size:13px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--inv-3);
 }
-.hero-cover .bar-top{top:60px}
-.hero-cover .bar-btm{bottom:88px}
-.hero-cover .bar-top b, .hero-cover .bar-btm b{color:var(--accent); letter-spacing:.28em; font-weight:600}
-.hero-cover .content{padding:0 128px; position:relative; z-index:2; max-width:1500px}
+.hero-cover .hcv-top b{color:var(--accent); letter-spacing:.28em; font-weight:600}
+.hero-cover .hcv-body{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+  padding:60px 0;
+}
 .hero-cover .kicker{
   display:inline-flex; align-items:center; gap:12px;
   padding:8px 18px; border:1px solid var(--dark-border-2); border-radius:100px;
   font-family:var(--font-mono); font-size:12px; letter-spacing:.16em;
   text-transform:uppercase; color:var(--inv-2); background:rgba(255,255,255,.03);
-  margin-bottom:56px;
+  margin-bottom:44px; align-self:flex-start;
 }
 .hero-cover .kicker .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 14px var(--accent)}
 .hero-cover h1{
-  font-size:128px; line-height:.95; letter-spacing:-.045em; font-weight:800;
+  font-size:108px; line-height:.98; letter-spacing:-.045em; font-weight:800;
   color:var(--inv); max-width:14em;
 }
 .hero-cover h1 .accent{color:var(--accent)}
 .hero-cover .lede{
-  margin-top:44px; font-size:30px; color:var(--inv-2); max-width:26em;
+  margin-top:36px; font-size:26px; color:var(--inv-2); max-width:26em;
   line-height:1.4; font-weight:400;
 }
+.hero-cover .hcv-bottom{
+  display:flex; justify-content:space-between; align-items:center;
+  padding-top:24px; border-top:1px solid var(--dark-border);
+  font-family:var(--font-mono); font-size:13px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--inv-3);
+}
+.hero-cover .hcv-bottom b{color:var(--accent); letter-spacing:.28em; font-weight:600}
 
 /* ============ 2 · NUMBER HERO ============ */
 .number-hero{
@@ -518,19 +533,19 @@ html,body{
 <div class="reveal">
   <div class="slides">
 
-    <!-- ================ 1 · COVER ================ -->
-    <section class="dark">
+    <!-- ================ 1 · COVER · rediseñada sin overlap ================ -->
+    <section class="dark cover-slide">
       <div class="hero-cover">
-        <div class="bar-top">
+        <div class="hcv-top">
           <div>Proyecto J&F · Documento operativo</div>
           <div>Un documento de <b>DYNKER</b> · Julio 2026</div>
         </div>
-        <div class="content">
+        <div class="hcv-body">
           <div class="kicker"><span class="dot"></span> Dirección Ejecutiva · Confidencial</div>
-          <h1>Suministro<br>estratégico de<br><span class="accent">gas oil</span>.</h1>
+          <h1>Suministro estratégico de <span class="accent">gas oil</span>.</h1>
           <div class="lede">Un programa continuo de doce ciclos mensuales que integra la reexportación a Bolivia y la venta local en Paraguay bajo un mismo flujo logístico.</div>
         </div>
-        <div class="bar-btm">
+        <div class="hcv-bottom">
           <div>Diseñado y desarrollado por <b>DYNKER</b> · Adecomi · Pessasa</div>
           <div>660.000 m³ / año</div>
         </div>
@@ -538,7 +553,7 @@ html,body{
     </section>
 
     <!-- ================ 2 · HERO NÚMERO ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">La tesis</div>
       <div class="number-hero">
         <div>
@@ -556,7 +571,7 @@ html,body{
     </section>
 
     <!-- ================ 3 · EXECUTIVE SUMMARY ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Resumen ejecutivo</div>
       <h2>Cuatro pilares del programa.</h2>
       <table class="data-table">
@@ -608,7 +623,7 @@ html,body{
     </section>
 
     <!-- ================ 5 · MODELO OPERATIVO ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Modelo operativo</div>
       <h2>Del origen al destino, un solo flujo.</h2>
       <div class="flow-primary">
@@ -663,7 +678,7 @@ html,body{
     </section>
 
     <!-- ================ 7 · SEGMENTOS ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Segmentación de la demanda</div>
       <h2>A quién le vendemos cada ciclo.</h2>
       <div class="segments">
@@ -696,7 +711,7 @@ html,body{
     </section>
 
     <!-- ================ 8 · MARCO LEGAL ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Marco legal · ventaja competitiva</div>
       <h2>El régimen IDA convierte el tiempo en herramienta.</h2>
       <div class="doc-card">
@@ -761,7 +776,7 @@ html,body{
     </section>
 
     <!-- ================ 10 · TIMELINE VERTICAL (REDISEÑADO) ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Ritmo operativo</div>
       <h2>Los cinco hitos que gobiernan cada ciclo.</h2>
       <div class="timeline-v">
@@ -809,7 +824,7 @@ html,body{
     </section>
 
     <!-- ================ 11 · SUPERPOSICIÓN ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Continuidad de suministro</div>
       <h2>Ciclos superpuestos, sin interrupción.</h2>
       <h3>Mientras un lote está en retiro, el siguiente ya navega. La superposición sostiene el ritmo de 55.000 m³ mensuales.</h3>
@@ -851,7 +866,7 @@ html,body{
     </section>
 
     <!-- ================ 12 · CALENDARIO 12 CICLOS ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Cronograma anual del programa</div>
       <h2>Doce ciclos, catorce meses.</h2>
       <h3>Ritmo mensual encadenado desde la primera carga hasta el cierre del último techo IDA. Fecha de inicio oficial pendiente de confirmación · el cronograma se ancla al mes de arranque.</h3>
@@ -897,7 +912,7 @@ html,body{
     </section>
 
     <!-- ================ 13 · KPIs ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Indicadores de excelencia operativa</div>
       <h2>Cómo medimos que el modelo funciona.</h2>
       <h3>Metas internas de gestión propuestas por Dynker. Se calibrarán tras el ciclo 1 con datos reales.</h3>
@@ -941,7 +956,7 @@ html,body{
     </section>
 
     <!-- ================ 15 · ROADMAP ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Plan de trabajo 2026 – 2027</div>
       <h2>Doce ciclos, tres fases.</h2>
       <h3>Plan operativo propuesto por Dynker. Los hitos comerciales específicos se ajustan según los resultados de cada fase.</h3>
@@ -980,7 +995,7 @@ html,body{
     </section>
 
     <!-- ================ · SUPUESTOS DEL MODELO ================ -->
-    <section class="light top">
+    <section class="light">
       <div class="eyebrow">Supuestos del modelo</div>
       <h2>Premisas explícitas que sostienen el programa.</h2>
       <h3>Cinco supuestos operativos que gobiernan todos los cálculos del cronograma y la asignación de terminales.</h3>
