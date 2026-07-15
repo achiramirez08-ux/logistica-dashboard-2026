@@ -71,17 +71,13 @@ html,body{background:#000}
 .reveal em{font-style:normal; color:var(--accent); font-weight:700}
 .reveal a{color:var(--accent); text-decoration:none}
 
-/* SLIDE BASE — padding calibrado para dejar zona limpia arriba y espacio para chrome abajo.
-   Chrome persistente ocupa 44px inferior; padding-bottom 96px garantiza clearance de 52px */
+/* SLIDE BASE — padding uniforme. Reveal.js maneja el centrado vertical con center:true */
 .reveal .slides section{
-  padding:64px 128px 96px !important;
-  height:100%;
-  display:flex !important;
-  flex-direction:column;
-  justify-content:center;
+  padding:64px 128px 96px;
+  box-sizing:border-box;
 }
-/* .top = contenido denso: alinea arriba pero SIN padding extra (el base ya lo tiene calibrado) */
-.reveal .slides section.top{justify-content:flex-start}
+/* Slides especiales (cover) usan padding cero — su hero-cover se encarga */
+.reveal .slides section.cover-slide{padding:0}
 
 /* ============ TEMAS ============ */
 .reveal .slides section.light{background:var(--paper) !important; color:var(--ink) !important}
@@ -1088,10 +1084,10 @@ Reveal.initialize({
   transitionSpeed:'default',
   backgroundTransition:'fade',
   width:1920, height:1080,
-  margin:0,
+  margin:0.02,
   minScale:0.2, maxScale:1.5,
   controls:false, progress:true,
-  center:false, overview:true, touch:true,
+  center:true, overview:true, touch:true,
   disableLayout:false
 });
 function updateChrome(){
